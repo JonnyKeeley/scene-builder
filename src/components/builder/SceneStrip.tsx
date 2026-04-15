@@ -72,16 +72,18 @@ export default function SceneStrip({
         </div>
       ))}
 
-      {/* Add scene */}
-      <button
-        onClick={() => addFileRef.current?.click()}
-        className="w-20 h-20 shrink-0 rounded-xl border-2 border-dashed border-zinc-600 flex items-center justify-center text-zinc-500 hover:text-zinc-200 hover:border-zinc-400 hover:bg-zinc-800/30 transition-all"
-        title="Add scene"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M5 12h14"/><path d="M12 5v14"/>
-        </svg>
-      </button>
+      {/* Add scene — wrapped same as thumbnails for alignment */}
+      <div className="relative shrink-0">
+        <button
+          onClick={() => addFileRef.current?.click()}
+          className="w-20 h-20 rounded-xl border-2 border-dashed border-zinc-600 flex items-center justify-center text-zinc-500 hover:text-zinc-200 hover:border-zinc-400 hover:bg-zinc-800/30 transition-all"
+          title="Add scene"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12h14"/><path d="M12 5v14"/>
+          </svg>
+        </button>
+      </div>
 
       <input ref={addFileRef} type="file" accept="image/jpeg,image/png,image/webp"
         onChange={e => { const f = e.target.files?.[0]; if (f) onAddScene(f); e.target.value = '' }}
