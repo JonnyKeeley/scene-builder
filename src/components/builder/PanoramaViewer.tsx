@@ -180,47 +180,51 @@ export default function PanoramaViewer({
       group.remove(child)
     }
 
-    // Create new markers — red circle with white dot
+    // Create hotspot marker texture — red circle with white dot, drawn on canvas
+    const makeMarkerTexture = (size: number, selected: boolean) => {
+      const canvas = document.createElement('canvas')
+      canvas.width = size
+      canvas.height = size
+      const ctx = canvas.getContext('2d')!
+      const cx = size / 2
+      // Red circle
+      ctx.beginPath()
+      ctx.arc(cx, cx, cx * 0.85, 0, Math.PI * 2)
+      ctx.fillStyle = selected ? '#dc2626' : '#ef4444'
+      ctx.fill()
+      // White dot
+      ctx.beginPath()
+      ctx.arc(cx, cx, cx * 0.35, 0, Math.PI * 2)
+      ctx.fillStyle = '#ffffff'
+      ctx.fill()
+      // Outer glow ring
+      ctx.beginPath()
+      ctx.arc(cx, cx, cx * 0.95, 0, Math.PI * 2)
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.3)'
+      ctx.lineWidth = size * 0.06
+      ctx.stroke()
+      const texture = new THREE.Texture(canvas)
+      texture.needsUpdate = true
+      return texture
+    }
+
+    // Create new markers as sprites
     hotspots.forEach(hotspot => {
       const position = pitchYawToCartesian(hotspot.pitch, hotspot.yaw)
       const isSelected = hotspot.id === selectedHotspotId
+      const spriteSize = isSelected ? 400 : 320
 
-      // Red outer circle — JUMBO
-      const markerGeo = new THREE.SphereGeometry(isSelected ? 200 : 160, 24, 24)
-      const markerMat = new THREE.MeshBasicMaterial({
-        color: 0xef4444,
+      const texture = makeMarkerTexture(128, isSelected)
+      const spriteMat = new THREE.SpriteMaterial({
+        map: texture,
         transparent: true,
-        opacity: isSelected ? 1 : 0.95,
+        depthTest: false,
       })
-      const marker = new THREE.Mesh(markerGeo, markerMat)
-      marker.position.copy(position)
-      marker.userData.hotspotId = hotspot.id
-      group.add(marker)
-
-      // White center disc — flat circle facing camera origin, in front of red sphere
-      const dotGeo = new THREE.CircleGeometry(isSelected ? 80 : 60, 32)
-      const dotMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide })
-      const dot = new THREE.Mesh(dotGeo, dotMat)
-      // Position slightly in front of the red sphere (towards camera at 0,0,0)
-      const dir = position.clone().normalize()
-      dot.position.copy(dir.multiplyScalar(SPHERE_RADIUS - 200))
-      dot.lookAt(0, 0, 0)
-      dot.userData.hotspotId = hotspot.id
-      group.add(dot)
-
-      // Outer glow ring
-      const ringGeo = new THREE.RingGeometry(isSelected ? 220 : 180, isSelected ? 250 : 210, 32)
-      const ringMat = new THREE.MeshBasicMaterial({
-        color: 0xef4444,
-        transparent: true,
-        opacity: 0.2,
-        side: THREE.DoubleSide,
-      })
-      const ring = new THREE.Mesh(ringGeo, ringMat)
-      ring.position.copy(position)
-      ring.lookAt(0, 0, 0)
-      ring.userData.hotspotId = hotspot.id
-      group.add(ring)
+      const sprite = new THREE.Sprite(spriteMat)
+      sprite.position.copy(position)
+      sprite.scale.set(spriteSize, spriteSize, 1)
+      sprite.userData.hotspotId = hotspot.id
+      group.add(sprite)
     })
   }, [hotspots, selectedHotspotId])
 
