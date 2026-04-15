@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import type { Project } from '@/types/database'
 
 interface ProjectCardProps {
@@ -10,6 +10,8 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ project, thumbnail, onClick, onDelete }: ProjectCardProps) {
   const [copied, setCopied] = useState(false)
+  const [panX, setPanX] = useState(50)
+  const cardRef = useRef<HTMLDivElement>(null)
 
   const updatedAt = new Date(project.updated_at).toLocaleDateString('en-GB', {
     day: 'numeric', month: 'short', year: 'numeric',
@@ -24,15 +26,40 @@ export default function ProjectCard({ project, thumbnail, onClick, onDelete }: P
     setTimeout(() => setCopied(false), 2000)
   }
 
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const x = ((e.clientX - rect.left) / rect.width) * 100
+    setPanX(x)
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    setPanX(50)
+  }, [])
+
   return (
     <div
+      ref={cardRef}
       onClick={onClick}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className="aspect-[4/3] rounded-xl overflow-hidden cursor-pointer group relative bg-zinc-900 border border-zinc-800/50 hover:border-zinc-700 transition-all hover:shadow-xl hover:shadow-black/30 hover:-translate-y-0.5"
     >
-      {/* Thumbnail */}
+      {/* Thumbnail with hover pan */}
       <div className="absolute inset-0">
         {thumbnail ? (
-          <img src={thumbnail} alt="" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+          <img
+            src={thumbnail}
+            alt=""
+            className="h-full opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+            style={{
+              width: '200%',
+              maxWidth: 'none',
+              objectFit: 'cover',
+              objectPosition: `${panX}% center`,
+              transition: 'object-position 0.15s ease-out, opacity 0.3s',
+            }}
+          />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-zinc-900 to-zinc-800" />
         )}
@@ -46,7 +73,7 @@ export default function ProjectCard({ project, thumbnail, onClick, onDelete }: P
         <p className="font-mono-caption text-zinc-500">{updatedAt}</p>
       </div>
 
-      {/* Hover action bar — bottom of thumbnail area */}
+      {/* Hover action bar */}
       <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <button
           onClick={copyLink}
