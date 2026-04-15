@@ -3,7 +3,7 @@ import type { Hotspot, MediaType, ChartData } from '@/types/database'
 import ChartEditor from './ChartEditor'
 
 const MEDIA_OPTIONS: { value: MediaType | ''; label: string }[] = [
-  { value: '', label: 'None' },
+  { value: '', label: 'Text' },
   { value: 'image', label: 'Image' },
   { value: 'youtube', label: 'YouTube' },
   { value: 'video', label: 'Video' },
