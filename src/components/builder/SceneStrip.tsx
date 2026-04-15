@@ -23,102 +23,81 @@ export default function SceneStrip({
   const replaceTargetRef = useRef<string | null>(null)
 
   return (
-    <div className="h-20 bg-zinc-900 border-t border-zinc-800 flex items-center px-4 gap-3 overflow-x-auto shrink-0">
+    <div className="panel-glass flex items-center px-2 py-2 gap-2 max-w-[80vw] overflow-x-auto">
       {scenes.map(scene => (
         <div
           key={scene.id}
-          onClick={() => onSelectScene(scene.id)}
-          className={`shrink-0 h-14 px-4 rounded-md flex items-center gap-2 text-sm cursor-pointer relative group/scene transition-all ${
-            scene.id === activeSceneId
-              ? 'bg-teal-500/10 border border-teal-500/30 text-zinc-50'
-              : 'bg-zinc-800 border border-zinc-700 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200'
-          }`}
+          className="relative group/thumb shrink-0"
         >
-          {/* Action buttons — top right */}
-          <div className="absolute -top-2 -right-2 flex gap-0.5 opacity-0 group-hover/scene:opacity-100 transition-all">
-            {/* Replace image */}
+          <button
+            onClick={() => onSelectScene(scene.id)}
+            className={`w-12 h-12 rounded-lg overflow-hidden transition-all ${
+              scene.id === activeSceneId
+                ? 'ring-2 ring-teal-500 ring-offset-1 ring-offset-zinc-900'
+                : 'ring-1 ring-zinc-700 hover:ring-zinc-500 hover:scale-105'
+            }`}
+            title={scene.title}
+          >
+            {scene.image_url ? (
+              <img src={scene.image_url} alt={scene.title} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-zinc-800 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-600">
+                  <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/>
+                </svg>
+              </div>
+            )}
+          </button>
+
+          {/* Hover actions */}
+          <div className="absolute -top-2 -right-2 flex gap-0.5 opacity-0 group-hover/thumb:opacity-100 transition-opacity z-10">
             <button
-              onClick={e => {
-                e.stopPropagation()
+              onClick={() => {
                 replaceTargetRef.current = scene.id
                 replaceFileRef.current?.click()
               }}
-              className="w-5 h-5 rounded-full bg-zinc-950 border border-zinc-700 flex items-center justify-center text-zinc-500 hover:text-teal-400 hover:border-teal-400 transition-all"
-              title="Replace 360 image"
+              className="w-4 h-4 rounded-full bg-zinc-900 border border-zinc-600 flex items-center justify-center text-zinc-400 hover:text-teal-400 hover:border-teal-400 transition-all"
+              title="Replace image"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>
               </svg>
             </button>
-            {/* Delete scene */}
             {scenes.length > 1 && (
               <button
-                onClick={e => {
-                  e.stopPropagation()
-                  onDeleteScene(scene.id)
-                }}
-                className="w-5 h-5 rounded-full bg-zinc-950 border border-zinc-700 flex items-center justify-center text-zinc-500 hover:text-red-400 hover:border-red-400 transition-all"
+                onClick={() => onDeleteScene(scene.id)}
+                className="w-4 h-4 rounded-full bg-zinc-900 border border-zinc-600 flex items-center justify-center text-zinc-400 hover:text-red-400 hover:border-red-400 transition-all"
                 title="Delete scene"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
                 </svg>
               </button>
             )}
           </div>
-
-          {scene.image_url ? (
-            <img
-              src={scene.image_url}
-              alt=""
-              className="w-10 h-10 rounded object-cover"
-            />
-          ) : (
-            <div className="w-10 h-10 rounded bg-zinc-700 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-500">
-                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-              </svg>
-            </div>
-          )}
-          <span className="max-w-[100px] truncate text-xs font-medium">{scene.title}</span>
         </div>
       ))}
 
+      {/* Add scene */}
       <button
         onClick={() => addFileRef.current?.click()}
-        className="shrink-0 h-14 w-14 rounded-md border border-dashed border-zinc-700 flex items-center justify-center text-zinc-600 hover:text-zinc-300 hover:border-zinc-600 transition-all"
+        className="w-12 h-12 shrink-0 rounded-lg border border-dashed border-zinc-700 flex items-center justify-center text-zinc-600 hover:text-zinc-300 hover:border-zinc-500 transition-all"
         title="Add scene"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M5 12h14"/><path d="M12 5v14"/>
         </svg>
       </button>
 
-      {/* Hidden file inputs */}
-      <input
-        ref={addFileRef}
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
+      <input ref={addFileRef} type="file" accept="image/jpeg,image/png,image/webp"
+        onChange={e => { const f = e.target.files?.[0]; if (f) onAddScene(f); e.target.value = '' }}
+        className="hidden" />
+      <input ref={replaceFileRef} type="file" accept="image/jpeg,image/png,image/webp"
         onChange={e => {
-          const file = e.target.files?.[0]
-          if (file) onAddScene(file)
-          e.target.value = ''
+          const f = e.target.files?.[0]; const id = replaceTargetRef.current
+          if (f && id) onReplaceImage(id, f); e.target.value = ''; replaceTargetRef.current = null
         }}
-        className="hidden"
-      />
-      <input
-        ref={replaceFileRef}
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        onChange={e => {
-          const file = e.target.files?.[0]
-          const sceneId = replaceTargetRef.current
-          if (file && sceneId) onReplaceImage(sceneId, file)
-          e.target.value = ''
-          replaceTargetRef.current = null
-        }}
-        className="hidden"
-      />
+        className="hidden" />
     </div>
   )
 }

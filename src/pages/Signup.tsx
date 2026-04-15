@@ -14,42 +14,29 @@ export default function Signup() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setError('')
-
-    if (password !== confirmPassword) {
-      setError('Passwords do not match')
-      return
-    }
-
+    if (password !== confirmPassword) { setError('Passwords do not match'); return }
     setLoading(true)
     const { error } = await signUp(email, password)
-    if (error) {
-      setError(error.message)
-      setLoading(false)
-    } else {
-      setSuccess(true)
-      setLoading(false)
-    }
+    if (error) { setError(error.message); setLoading(false) }
+    else { setSuccess(true); setLoading(false) }
   }
 
   if (success) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4 bg-zinc-950">
-        <div className="w-full max-w-sm animate-fade-in">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 text-center relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-teal-500/50 to-transparent" />
-            <div className="w-10 h-10 rounded-full bg-teal-500/10 border border-teal-500/20 flex items-center justify-center mx-auto mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal-400">
-                <path d="M20 6 9 17l-5-5"/>
-              </svg>
-            </div>
-            <h1 className="text-lg font-semibold text-zinc-50 tracking-tight mb-2">Check your email</h1>
-            <p className="text-sm text-zinc-400 mb-6">
-              We've sent a confirmation link to <span className="text-zinc-50">{email}</span>
-            </p>
-            <Link to="/login" className="text-sm text-teal-400 hover:text-teal-300 transition-colors">
-              Back to sign in
-            </Link>
+        <div className="w-full max-w-[340px] text-center animate-fade-in">
+          <div className="w-10 h-10 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center mx-auto mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal-400">
+              <path d="M20 6 9 17l-5-5"/>
+            </svg>
           </div>
+          <h1 className="text-[15px] font-semibold text-zinc-50 mb-2">Check your email</h1>
+          <p className="text-[13px] text-zinc-500 mb-6">
+            Confirmation link sent to <span className="text-zinc-300">{email}</span>
+          </p>
+          <Link to="/login" className="text-[12px] text-teal-400 hover:text-teal-300 transition-colors">
+            Back to sign in
+          </Link>
         </div>
       </div>
     )
@@ -57,81 +44,45 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-zinc-950">
-      <div className="w-full max-w-sm animate-fade-in">
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-teal-500/50 to-transparent" />
-
-          <h1 className="text-xl font-semibold text-zinc-50 tracking-tight mb-6 text-center">
-            Create an account
+      <div className="w-full max-w-[340px] animate-fade-in">
+        <div className="text-center mb-10">
+          <h1 className="text-[13px] font-semibold text-zinc-50 tracking-[0.15em] uppercase">
+            IGLOO
           </h1>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-3 py-2 rounded-md text-sm animate-slide-up">
-                {error}
-              </div>
-            )}
-
-            <div>
-              <label htmlFor="email" className="block text-xs font-medium text-zinc-500 mb-1.5">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-                className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-md text-sm text-zinc-50 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-xs font-medium text-zinc-500 mb-1.5">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-                minLength={6}
-                className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-md text-sm text-zinc-50 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="confirmPassword" className="block text-xs font-medium text-zinc-500 mb-1.5">
-                Confirm password
-              </label>
-              <input
-                id="confirmPassword"
-                type="password"
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
-                required
-                minLength={6}
-                className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-md text-sm text-zinc-50 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-2 bg-teal-500 hover:bg-teal-600 disabled:opacity-50 text-white rounded-md text-sm font-medium transition-all active:scale-[0.98]"
-            >
-              {loading ? 'Creating account...' : 'Sign up'}
-            </button>
-          </form>
-
-          <p className="mt-6 text-center text-xs text-zinc-500">
-            Already have an account?{' '}
-            <Link to="/login" className="text-teal-400 hover:text-teal-300 transition-colors">
-              Sign in
-            </Link>
-          </p>
+          <p className="text-[13px] text-zinc-500 mt-1">Create an account</p>
         </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-3 py-2 rounded-lg text-[13px] animate-slide-up">
+              {error}
+            </div>
+          )}
+
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
+            placeholder="Email"
+            className="w-full px-3 py-3 bg-zinc-900/80 backdrop-blur border border-zinc-800/60 rounded-lg text-[13px] text-zinc-50 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-teal-500/40 focus:border-teal-500/40 transition-all" />
+
+          <input type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
+            placeholder="Password"
+            className="w-full px-3 py-3 bg-zinc-900/80 backdrop-blur border border-zinc-800/60 rounded-lg text-[13px] text-zinc-50 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-teal-500/40 focus:border-teal-500/40 transition-all" />
+
+          <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required minLength={6}
+            placeholder="Confirm password"
+            className="w-full px-3 py-3 bg-zinc-900/80 backdrop-blur border border-zinc-800/60 rounded-lg text-[13px] text-zinc-50 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-teal-500/40 focus:border-teal-500/40 transition-all" />
+
+          <button type="submit" disabled={loading}
+            className="w-full py-3 bg-teal-500 hover:bg-teal-600 disabled:opacity-50 text-white rounded-lg text-[13px] font-medium transition-all active:scale-[0.98]">
+            {loading ? 'Creating account...' : 'Sign up'}
+          </button>
+        </form>
+
+        <p className="mt-8 text-center text-[12px] text-zinc-600">
+          Already have an account?{' '}
+          <Link to="/login" className="text-teal-400 hover:text-teal-300 transition-colors">
+            Sign in
+          </Link>
+        </p>
       </div>
     </div>
   )

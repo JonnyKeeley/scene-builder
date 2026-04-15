@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useCallback } from 'react'
+import { useEffect, useReducer, useCallback, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { uploadPanorama, uploadMedia } from '@/lib/storage'
@@ -129,10 +129,42 @@ export default function SceneBuilder() {
   const { user } = useAuth()
   const [state, dispatch] = useReducer(reducer, initialState)
   const { uploading, upload } = useFileUpload()
+  const [showInstruction, setShowInstruction] = useState(false)
 
   const activeScene = state.scenes.find(s => s.id === state.activeSceneId) ?? null
   const activeHotspots = state.activeSceneId ? (state.hotspots[state.activeSceneId] || []) : []
   const selectedHotspot = activeHotspots.find(h => h.id === state.selectedHotspotId) ?? null
+  const panelOpen = !!state.selectedHotspotId
+
+  // Show instruction when entering placement mode
+  useEffect(() => {
+    if (state.placementMode) {
+      setShowInstruction(true)
+      const timer = setTimeout(() => setShowInstruction(false), 5000)
+      return () => clearTimeout(timer)
+    } else {
+      setShowInstruction(false)
+    }
+  }, [state.placementMode])
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+      if (e.key === 'h' || e.key === 'H') dispatch({ type: 'TOGGLE_PLACEMENT' })
+      if (e.key === 'Escape') {
+        if (state.placementMode) dispatch({ type: 'TOGGLE_PLACEMENT' })
+        else if (state.selectedHotspotId) dispatch({ type: 'SELECT_HOTSPOT', hotspotId: null })
+      }
+      if (e.key === 'p' || e.key === 'P') window.open(`/play/${projectId}`, '_blank')
+      if (e.key >= '1' && e.key <= '9') {
+        const idx = parseInt(e.key) - 1
+        if (state.scenes[idx]) dispatch({ type: 'SET_ACTIVE_SCENE', sceneId: state.scenes[idx].id })
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [state.placementMode, state.selectedHotspotId, state.scenes, projectId])
 
   // Fetch project data
   useEffect(() => {
@@ -144,10 +176,7 @@ export default function SceneBuilder() {
         .eq('id', projectId)
         .single()
 
-      if (!project) {
-        navigate('/')
-        return
-      }
+      if (!project) { navigate('/'); return }
 
       const { data: scenes } = await supabase
         .from('scenes')
@@ -172,7 +201,6 @@ export default function SceneBuilder() {
     fetchData()
   }, [projectId, navigate])
 
-  // Auto-save scene title
   const sceneTitleSave = useAutoSave(
     activeScene?.title ?? '',
     useCallback(async (title: string) => {
@@ -181,28 +209,24 @@ export default function SceneBuilder() {
     }, [activeScene?.id])
   )
 
-  // Auto-save selected hotspot
   useAutoSave(
     selectedHotspot,
     useCallback(async (hotspot: Hotspot | null) => {
       if (!hotspot) return
       await supabase.from('hotspots').update({
-        title: hotspot.title,
-        body: hotspot.body,
-        media_url: hotspot.media_url,
-        media_type: hotspot.media_type,
+        title: hotspot.title, body: hotspot.body,
+        media_url: hotspot.media_url, media_type: hotspot.media_type,
       }).eq('id', hotspot.id)
     }, [])
   )
 
   const handlePanoramaClick = useCallback(async (pitch: number, yaw: number) => {
     if (!state.activeSceneId) return
+    setShowInstruction(false)
     const { data } = await supabase
       .from('hotspots')
       .insert({ scene_id: state.activeSceneId, pitch, yaw, title: 'New Hotspot' })
-      .select()
-      .single()
-
+      .select().single()
     if (data) dispatch({ type: 'ADD_HOTSPOT', hotspot: data })
   }, [state.activeSceneId])
 
@@ -224,19 +248,11 @@ export default function SceneBuilder() {
     if (!user || !projectId) return
     const url = await upload(() => uploadPanorama(file, user.id))
     if (!url) return
-
     const newIndex = state.scenes.length
     const { data } = await supabase
       .from('scenes')
-      .insert({
-        project_id: projectId,
-        title: `Scene ${newIndex + 1}`,
-        image_url: url,
-        order_index: newIndex,
-      })
-      .select()
-      .single()
-
+      .insert({ project_id: projectId, title: `Scene ${newIndex + 1}`, image_url: url, order_index: newIndex })
+      .select().single()
     if (data) dispatch({ type: 'ADD_SCENE', scene: data })
   }, [user, projectId, state.scenes.length, upload])
 
@@ -257,65 +273,82 @@ export default function SceneBuilder() {
   const handleUploadMedia = useCallback(async (hotspotId: string, file: File) => {
     if (!user) return
     const url = await upload(() => uploadMedia(file, user.id))
-    if (url) {
-      dispatch({ type: 'UPDATE_HOTSPOT', hotspotId, updates: { media_url: url } })
-    }
+    if (url) dispatch({ type: 'UPDATE_HOTSPOT', hotspotId, updates: { media_url: url } })
   }, [user, upload])
 
   if (state.loading) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+      <div className="h-screen w-screen bg-zinc-950 flex items-center justify-center">
         <div className="w-6 h-6 border-2 border-teal-500/30 border-t-teal-500 rounded-full animate-spin" />
       </div>
     )
   }
 
   return (
-    <div className="h-screen flex flex-col bg-zinc-950">
-      <Toolbar
-        sceneTitle={activeScene?.title ?? ''}
-        onSceneTitleChange={title => {
-          if (activeScene) dispatch({ type: 'UPDATE_SCENE', sceneId: activeScene.id, updates: { title } })
-        }}
-        placementMode={state.placementMode}
-        onTogglePlacement={() => dispatch({ type: 'TOGGLE_PLACEMENT' })}
-        onUploadImage={handleUploadImage}
-        onPreview={() => window.open(`/play/${projectId}`, '_blank')}
-        onPreviewIgloo={() => window.open(`/play/${projectId}?mode=igloo`, '_blank')}
-        onBack={() => navigate('/')}
-        saving={sceneTitleSave.saving}
-        lastSaved={sceneTitleSave.lastSaved}
-        uploading={uploading}
-      />
-
-      <div className="flex flex-1 min-h-0">
-        {/* 360 Viewer - 70% */}
-        <div className="flex-[7] relative">
-          {!activeScene?.image_url ? (
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto mb-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-600">
-                    <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>
-                  </svg>
-                </div>
-                <p className="text-xs text-zinc-500">Upload a 360° image to get started</p>
+    <div className="h-screen w-screen bg-zinc-950 overflow-hidden relative">
+      {/* Full-canvas panorama */}
+      <div className={`absolute inset-0 vignette ${state.placementMode ? 'placement-active' : ''}`}>
+        {!activeScene?.image_url ? (
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="text-center animate-fade-in">
+              <div className="w-14 h-14 rounded-2xl panel-glass flex items-center justify-center mx-auto mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-500">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>
+                </svg>
               </div>
+              <p className="text-[13px] text-zinc-500">Upload a 360° image to get started</p>
             </div>
-          ) : (
-            <PanoramaViewer
-              imageUrl={activeScene.image_url}
-              hotspots={activeHotspots}
-              placementMode={state.placementMode}
-              selectedHotspotId={state.selectedHotspotId}
-              onPanoramaClick={handlePanoramaClick}
-              onHotspotClick={id => dispatch({ type: 'SELECT_HOTSPOT', hotspotId: id })}
-            />
-          )}
-        </div>
+          </div>
+        ) : (
+          <PanoramaViewer
+            imageUrl={activeScene.image_url}
+            hotspots={activeHotspots}
+            placementMode={state.placementMode}
+            selectedHotspotId={state.selectedHotspotId}
+            onPanoramaClick={handlePanoramaClick}
+            onHotspotClick={id => dispatch({ type: 'SELECT_HOTSPOT', hotspotId: id })}
+          />
+        )}
+      </div>
 
-        {/* Hotspot Panel - 30% */}
-        <div className="flex-[3] border-l border-zinc-800">
+      {/* Floating toolbar — top left, vertical */}
+      <div className={`absolute top-4 left-4 z-10 transition-opacity duration-300 ${state.placementMode ? '' : ''}`}>
+        <Toolbar
+          sceneTitle={activeScene?.title ?? ''}
+          onSceneTitleChange={title => {
+            if (activeScene) dispatch({ type: 'UPDATE_SCENE', sceneId: activeScene.id, updates: { title } })
+          }}
+          placementMode={state.placementMode}
+          onTogglePlacement={() => dispatch({ type: 'TOGGLE_PLACEMENT' })}
+          onUploadImage={handleUploadImage}
+          onPreview={() => window.open(`/play/${projectId}`, '_blank')}
+          onPreviewIgloo={() => window.open(`/play/${projectId}?mode=igloo`, '_blank')}
+          onBack={() => navigate('/')}
+          saving={sceneTitleSave.saving}
+          lastSaved={sceneTitleSave.lastSaved}
+          uploading={uploading}
+        />
+      </div>
+
+      {/* Placement mode instruction */}
+      {showInstruction && (
+        <div className="absolute top-4 left-20 z-10 animate-slide-up">
+          <div className="panel-glass px-3 py-2 text-[12px] text-zinc-400">
+            Click on the panorama to place a hotspot
+          </div>
+        </div>
+      )}
+
+      {/* Floating hotspot panel — right side, slides in/out */}
+      <div
+        className={`absolute top-4 right-4 bottom-24 z-10 w-80 transition-all duration-300 ${
+          panelOpen
+            ? 'translate-x-0 opacity-100'
+            : 'translate-x-8 opacity-0 pointer-events-none'
+        }`}
+        style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+      >
+        <div className="panel-glass h-full overflow-hidden">
           <HotspotPanel
             hotspots={activeHotspots}
             selectedHotspot={selectedHotspot}
@@ -328,14 +361,32 @@ export default function SceneBuilder() {
         </div>
       </div>
 
-      <SceneStrip
-        scenes={state.scenes}
-        activeSceneId={state.activeSceneId}
-        onSelectScene={id => dispatch({ type: 'SET_ACTIVE_SCENE', sceneId: id })}
-        onAddScene={handleAddScene}
-        onDeleteScene={handleDeleteScene}
-        onReplaceImage={handleReplaceImage}
-      />
+      {/* Panel toggle tab when closed */}
+      {!panelOpen && activeHotspots.length > 0 && (
+        <button
+          onClick={() => {
+            if (activeHotspots[0]) dispatch({ type: 'SELECT_HOTSPOT', hotspotId: activeHotspots[0].id })
+          }}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full panel-glass flex items-center justify-center text-zinc-500 hover:text-teal-400 transition-all"
+          title="Show hotspot panel"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
+        </button>
+      )}
+
+      {/* Floating scene strip — bottom centre */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
+        <SceneStrip
+          scenes={state.scenes}
+          activeSceneId={state.activeSceneId}
+          onSelectScene={id => dispatch({ type: 'SET_ACTIVE_SCENE', sceneId: id })}
+          onAddScene={handleAddScene}
+          onDeleteScene={handleDeleteScene}
+          onReplaceImage={handleReplaceImage}
+        />
+      </div>
     </div>
   )
 }
