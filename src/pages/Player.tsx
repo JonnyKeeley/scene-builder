@@ -106,7 +106,7 @@ export default function Player() {
           <img
             src={activeScene.image_url}
             alt=""
-            className="w-full h-full object-cover"
+            className="w-full h-full object-fill"
           />
         )}
 
