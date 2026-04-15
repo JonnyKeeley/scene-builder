@@ -86,7 +86,7 @@ export default function Player() {
   if (loading) {
     return (
       <div className="h-screen w-screen bg-black flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-teal-500/30 border-t-teal-500 rounded-full animate-spin" />
       </div>
     )
   }
@@ -122,12 +122,12 @@ export default function Player() {
               className="absolute -translate-x-1/2 -translate-y-1/2 group"
               style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
             >
-              <div className={`w-5 h-5 rounded-full border-2 transition-all ${
+              <div className={`w-4 h-4 rounded-full border-2 transition-all ${
                 isSelected
-                  ? 'bg-blue-500 border-blue-300 scale-125'
-                  : 'bg-white/80 border-white hover:bg-blue-400 hover:border-blue-300 hover:scale-110'
+                  ? 'bg-teal-400 border-teal-300 scale-125'
+                  : 'bg-teal-500/80 border-teal-400 hover:bg-teal-400 hover:scale-110'
               }`} />
-              <div className={`absolute w-8 h-8 -top-1.5 -left-1.5 rounded-full border border-white/30 animate-ping ${
+              <div className={`absolute w-7 h-7 -top-1.5 -left-1.5 rounded-full border border-teal-400/30 animate-ping ${
                 isSelected ? 'hidden' : ''
               }`} />
             </button>
@@ -208,8 +208,8 @@ export default function Player() {
               }}
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                 i === activeSceneIndex
-                  ? 'bg-white text-black'
-                  : 'bg-white/20 text-white hover:bg-white/30'
+                  ? 'bg-teal-500 text-white'
+                  : 'bg-white/10 text-white/70 hover:bg-white/20'
               }`}
             >
               {scene.title}

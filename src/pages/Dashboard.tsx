@@ -36,7 +36,6 @@ export default function Dashboard() {
       .single()
 
     if (data && !error) {
-      // Create a default first scene
       await supabase
         .from('scenes')
         .insert({ project_id: data.id, title: 'Scene 1', order_index: 0 })
@@ -53,26 +52,26 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen">
-      <header className="border-b border-slate-800 px-6 py-4 flex items-center justify-between">
-        <h1 className="text-lg font-semibold text-white">Igloo Scene Builder</h1>
+    <div className="min-h-screen bg-zinc-950">
+      <header className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between">
+        <h1 className="text-sm font-semibold text-zinc-50 tracking-tight">Igloo Scene Builder</h1>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-slate-400">{user?.email}</span>
+          <span className="text-xs text-zinc-500">{user?.email}</span>
           <button
             onClick={signOut}
-            className="text-sm text-slate-400 hover:text-white transition-colors"
+            className="text-xs text-zinc-500 hover:text-zinc-200 transition-colors"
           >
             Sign out
           </button>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-white">Projects</h2>
+      <main className="max-w-5xl mx-auto px-6 py-8 animate-fade-in">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-xl font-semibold text-zinc-50 tracking-tight">Projects</h2>
           <button
             onClick={createProject}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded font-medium transition-colors"
+            className="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white text-sm rounded-md font-medium transition-all active:scale-[0.98]"
           >
             New project
           </button>
@@ -81,18 +80,23 @@ export default function Dashboard() {
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3].map(i => (
-              <div key={i} className="bg-slate-800 border border-slate-700 rounded-lg p-5 animate-pulse">
-                <div className="h-5 bg-slate-700 rounded w-2/3 mb-3" />
-                <div className="h-4 bg-slate-700 rounded w-1/3" />
+              <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-lg p-5 animate-pulse">
+                <div className="h-4 bg-zinc-800 rounded w-2/3 mb-3" />
+                <div className="h-3 bg-zinc-800 rounded w-1/3" />
               </div>
             ))}
           </div>
         ) : projects.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-slate-400 mb-4">No projects yet</p>
+          <div className="text-center py-20 animate-fade-in">
+            <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-600">
+                <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>
+              </svg>
+            </div>
+            <p className="text-sm text-zinc-500 mb-4">No projects yet</p>
             <button
               onClick={createProject}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded font-medium transition-colors"
+              className="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white text-sm rounded-md font-medium transition-all active:scale-[0.98]"
             >
               Create your first project
             </button>

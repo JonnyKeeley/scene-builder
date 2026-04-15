@@ -19,15 +19,15 @@ export default function SceneStrip({
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   return (
-    <div className="h-20 bg-slate-800 border-t border-slate-700 flex items-center px-4 gap-3 overflow-x-auto shrink-0">
+    <div className="h-20 bg-zinc-900 border-t border-zinc-800 flex items-center px-4 gap-3 overflow-x-auto shrink-0">
       {scenes.map(scene => (
         <div
           key={scene.id}
           onClick={() => onSelectScene(scene.id)}
-          className={`shrink-0 h-14 px-4 rounded flex items-center gap-2 text-sm transition-colors cursor-pointer relative group/scene ${
+          className={`shrink-0 h-14 px-4 rounded-md flex items-center gap-2 text-sm cursor-pointer relative group/scene transition-all ${
             scene.id === activeSceneId
-              ? 'bg-blue-600/20 border border-blue-500 text-white'
-              : 'bg-slate-700 border border-slate-600 text-slate-300 hover:border-slate-500'
+              ? 'bg-teal-500/10 border border-teal-500/30 text-zinc-50'
+              : 'bg-zinc-800 border border-zinc-700 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200'
           }`}
         >
           {scenes.length > 1 && (
@@ -36,7 +36,7 @@ export default function SceneStrip({
                 e.stopPropagation()
                 onDeleteScene(scene.id)
               }}
-              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-600 flex items-center justify-center text-slate-400 hover:text-red-400 hover:border-red-400 opacity-0 group-hover/scene:opacity-100 transition-opacity"
+              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-zinc-950 border border-zinc-700 flex items-center justify-center text-zinc-500 hover:text-red-400 hover:border-red-400 opacity-0 group-hover/scene:opacity-100 transition-all"
               title="Delete scene"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -51,22 +51,22 @@ export default function SceneStrip({
               className="w-10 h-10 rounded object-cover"
             />
           ) : (
-            <div className="w-10 h-10 rounded bg-slate-600 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+            <div className="w-10 h-10 rounded bg-zinc-700 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-500">
                 <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
               </svg>
             </div>
           )}
-          <span className="max-w-[100px] truncate">{scene.title}</span>
+          <span className="max-w-[100px] truncate text-xs font-medium">{scene.title}</span>
         </div>
       ))}
 
       <button
         onClick={() => fileInputRef.current?.click()}
-        className="shrink-0 h-14 w-14 rounded border border-dashed border-slate-600 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
+        className="shrink-0 h-14 w-14 rounded-md border border-dashed border-zinc-700 flex items-center justify-center text-zinc-600 hover:text-zinc-300 hover:border-zinc-600 transition-all"
         title="Add scene"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M5 12h14"/><path d="M12 5v14"/>
         </svg>
       </button>

@@ -255,14 +255,14 @@ export default function SceneBuilder() {
 
   if (state.loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-teal-500/30 border-t-teal-500 rounded-full animate-spin" />
       </div>
     )
   }
 
   return (
-    <div className="h-screen flex flex-col bg-slate-900">
+    <div className="h-screen flex flex-col bg-zinc-950">
       <Toolbar
         sceneTitle={activeScene?.title ?? ''}
         onSceneTitleChange={title => {
@@ -283,12 +283,14 @@ export default function SceneBuilder() {
         {/* 360 Viewer - 70% */}
         <div className="flex-[7] relative">
           {!activeScene?.image_url ? (
-            <div className="w-full h-full flex items-center justify-center text-slate-500">
+            <div className="w-full h-full flex items-center justify-center">
               <div className="text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-3 opacity-50">
-                  <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>
-                </svg>
-                <p className="text-sm">Upload a 360° image to get started</p>
+                <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto mb-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-600">
+                    <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>
+                  </svg>
+                </div>
+                <p className="text-xs text-zinc-500">Upload a 360° image to get started</p>
               </div>
             </div>
           ) : (
@@ -304,7 +306,7 @@ export default function SceneBuilder() {
         </div>
 
         {/* Hotspot Panel - 30% */}
-        <div className="flex-[3] border-l border-slate-700">
+        <div className="flex-[3] border-l border-zinc-800">
           <HotspotPanel
             hotspots={activeHotspots}
             selectedHotspot={selectedHotspot}

@@ -187,9 +187,9 @@ export default function PanoramaViewer({
 
       const markerGeo = new THREE.SphereGeometry(isSelected ? 80 : 60, 16, 16)
       const markerMat = new THREE.MeshBasicMaterial({
-        color: isSelected ? 0x3b82f6 : 0xffffff,
+        color: isSelected ? 0x0d9488 : 0x14b8a6,
         transparent: true,
-        opacity: isSelected ? 1 : 0.85,
+        opacity: isSelected ? 1 : 0.9,
       })
       const marker = new THREE.Mesh(markerGeo, markerMat)
       marker.position.copy(position)
@@ -199,9 +199,9 @@ export default function PanoramaViewer({
       // Outer ring for visibility
       const ringGeo = new THREE.RingGeometry(isSelected ? 90 : 70, isSelected ? 110 : 85, 32)
       const ringMat = new THREE.MeshBasicMaterial({
-        color: isSelected ? 0x3b82f6 : 0xffffff,
+        color: isSelected ? 0x0d9488 : 0x14b8a6,
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.3,
         side: THREE.DoubleSide,
       })
       const ring = new THREE.Mesh(ringGeo, ringMat)
