@@ -1,4 +1,10 @@
-export type MediaType = 'image' | 'youtube' | 'video' | 'chart' | 'gallery'
+export type MediaType = 'image' | 'youtube' | 'video' | 'chart' | 'gallery' | 'map'
+
+export interface MapData {
+  lat: number
+  lng: number
+  label?: string
+}
 
 export type ChartType = 'bar' | 'pie'
 

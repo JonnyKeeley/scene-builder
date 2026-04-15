@@ -1,6 +1,7 @@
 import { useRef } from 'react'
-import type { Hotspot, MediaType, ChartData } from '@/types/database'
+import type { Hotspot, MediaType, ChartData, MapData } from '@/types/database'
 import ChartEditor from './ChartEditor'
+import MapEditor from './MapEditor'
 
 const MEDIA_OPTIONS: { value: MediaType | ''; label: string }[] = [
   { value: '', label: 'Text' },
@@ -9,6 +10,7 @@ const MEDIA_OPTIONS: { value: MediaType | ''; label: string }[] = [
   { value: 'video', label: 'Video' },
   { value: 'chart', label: 'Chart' },
   { value: 'gallery', label: 'Gallery' },
+  { value: 'map', label: 'Map' },
 ]
 
 interface HotspotPanelProps {
@@ -240,6 +242,13 @@ export default function HotspotPanel({
             </div>
           )
         })()}
+
+        {selectedHotspot.media_type === 'map' && (
+          <MapEditor
+            value={selectedHotspot.media_url ? (() => { try { return JSON.parse(selectedHotspot.media_url) as MapData } catch { return null } })() : null}
+            onChange={(mapData) => onUpdateHotspot(selectedHotspot.id, { media_url: JSON.stringify(mapData) })}
+          />
+        )}
 
         <button
           onClick={() => onSelectHotspot(null)}

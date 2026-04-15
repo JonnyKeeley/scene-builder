@@ -1,5 +1,6 @@
-import type { Hotspot, ChartData } from '@/types/database'
+import type { Hotspot, ChartData, MapData } from '@/types/database'
 import ChartRenderer from './ChartRenderer'
+import MapRenderer from './MapRenderer'
 
 interface HotspotOverlayProps {
   hotspot: Hotspot
@@ -17,7 +18,8 @@ export default function HotspotOverlay({ hotspot, onClose }: HotspotOverlayProps
   const hasVideo = hotspot.media_type === 'youtube' || hotspot.media_type === 'video'
   const hasChart = hotspot.media_type === 'chart'
   const hasGallery = hotspot.media_type === 'gallery'
-  const widthClass = hasVideo || hasChart || hasGallery ? 'w-96' : 'w-72'
+  const hasMap = hotspot.media_type === 'map'
+  const widthClass = hasVideo || hasChart || hasGallery || hasMap ? 'w-96' : 'w-72'
 
   return (
     <div className={`${widthClass} bg-black/75 backdrop-blur-md rounded-xl border border-white/15 shadow-2xl pointer-events-none`}>
@@ -96,6 +98,15 @@ export default function HotspotOverlay({ hotspot, onClose }: HotspotOverlayProps
                   ))}
                 </div>
               )
+            } catch {
+              return null
+            }
+          })()}
+
+          {hotspot.media_type === 'map' && hotspot.media_url && (() => {
+            try {
+              const mapData = JSON.parse(hotspot.media_url) as MapData
+              return <MapRenderer data={mapData} />
             } catch {
               return null
             }
