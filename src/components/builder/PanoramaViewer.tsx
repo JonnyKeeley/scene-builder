@@ -292,7 +292,7 @@ export default function PanoramaViewer({
       {overlayContent && (
         <div
           ref={overlayRef}
-          className="absolute top-0 left-0 pointer-events-auto transition-opacity duration-150"
+          className="absolute top-0 left-0 pointer-events-none transition-opacity duration-150"
           style={{ opacity: 0 }}
         >
           <div className="-translate-x-1/2 -translate-y-full pb-4">
