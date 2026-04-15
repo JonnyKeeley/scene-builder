@@ -45,17 +45,16 @@ export default function Toolbar({
         onClick={onBack}
       />
 
-      {/* Scene title */}
-      <div className="px-4 py-2">
-        <input
-          type="text"
-          value={sceneTitle}
-          onChange={e => onSceneTitleChange(e.target.value)}
-          className={`bg-transparent text-zinc-50 text-sm font-medium focus:outline-none w-full truncate ${
-            expanded ? '' : 'opacity-0 pointer-events-none h-0 py-0'
-          }`}
-        />
-        {!expanded && (
+      {/* Scene title — fixed height so expand doesn't shift layout */}
+      <div className="px-4 py-3 h-[52px] flex items-center">
+        {expanded ? (
+          <input
+            type="text"
+            value={sceneTitle}
+            onChange={e => onSceneTitleChange(e.target.value)}
+            className="bg-transparent text-zinc-50 text-sm font-medium focus:outline-none w-full truncate"
+          />
+        ) : (
           <div className="w-7 h-7 mx-auto rounded-lg bg-zinc-700/50 flex items-center justify-center">
             <span className="text-sm text-zinc-300 font-semibold">{sceneTitle.charAt(0).toUpperCase()}</span>
           </div>
