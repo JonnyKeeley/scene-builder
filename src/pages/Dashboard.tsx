@@ -60,7 +60,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-zinc-950">
       <header className="border-b border-zinc-800/50 px-6 py-4 flex items-center justify-between">
-        <span className="text-[13px] font-semibold text-zinc-50 tracking-[0.15em] uppercase">IGLOO</span>
+        <span className="text-sm font-semibold text-zinc-50">Scene Builder</span>
         <div className="flex items-center gap-4">
           <span className="font-mono-caption text-zinc-600">{user?.email}</span>
           <button onClick={signOut} className="text-[12px] text-zinc-600 hover:text-zinc-300 transition-colors">
