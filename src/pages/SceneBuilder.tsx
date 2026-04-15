@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useCallback, useState } from 'react'
+import { useEffect, useReducer, useCallback, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { uploadPanorama, uploadMedia } from '@/lib/storage'
@@ -130,6 +130,7 @@ export default function SceneBuilder() {
   const [state, dispatch] = useReducer(reducer, initialState)
   const { uploading, upload } = useFileUpload()
   const [showInstruction, setShowInstruction] = useState(false)
+  const emptyUploadRef = useRef<HTMLInputElement>(null)
 
   const activeScene = state.scenes.find(s => s.id === state.activeSceneId) ?? null
   const activeHotspots = state.activeSceneId ? (state.hotspots[state.activeSceneId] || []) : []
@@ -201,7 +202,7 @@ export default function SceneBuilder() {
     fetchData()
   }, [projectId, navigate])
 
-  const sceneTitleSave = useAutoSave(
+  useAutoSave(
     activeScene?.title ?? '',
     useCallback(async (title: string) => {
       if (!activeScene) return
@@ -291,12 +292,30 @@ export default function SceneBuilder() {
         {!activeScene?.image_url ? (
           <div className="w-full h-full flex items-center justify-center">
             <div className="text-center animate-fade-in">
-              <div className="w-14 h-14 rounded-2xl panel-glass flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-500">
+              <div className="w-16 h-16 rounded-2xl panel-glass flex items-center justify-center mx-auto mb-5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-500">
                   <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>
                 </svg>
               </div>
-              <p className="text-sm text-zinc-500">Upload a 360° image to get started</p>
+              <p className="text-sm text-zinc-400 mb-5">Upload a 360° image to get started</p>
+              <button
+                onClick={() => emptyUploadRef.current?.click()}
+                disabled={uploading}
+                className="px-6 py-3 bg-teal-500 hover:bg-teal-600 disabled:opacity-50 text-white rounded-xl text-sm font-medium transition-all active:scale-[0.98]"
+              >
+                {uploading ? 'Uploading...' : 'Upload 360° image'}
+              </button>
+              <input
+                ref={emptyUploadRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={e => {
+                  const file = e.target.files?.[0]
+                  if (file) handleUploadImage(file)
+                  e.target.value = ''
+                }}
+                className="hidden"
+              />
             </div>
           </div>
         ) : (
@@ -320,13 +339,9 @@ export default function SceneBuilder() {
           }}
           placementMode={state.placementMode}
           onTogglePlacement={() => dispatch({ type: 'TOGGLE_PLACEMENT' })}
-          onUploadImage={handleUploadImage}
           onPreview={() => window.open(`/play/${projectId}`, '_blank')}
           onPreviewIgloo={() => window.open(`/play/${projectId}?mode=igloo`, '_blank')}
           onBack={() => navigate('/')}
-          saving={sceneTitleSave.saving}
-          lastSaved={sceneTitleSave.lastSaved}
-          uploading={uploading}
         />
       </div>
 

@@ -157,7 +157,7 @@ export default function HotspotPanel({
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploading}
-                  className="text-sm text-teal-400 hover:text-teal-300 transition-colors"
+                  className="w-full py-2.5 bg-zinc-800 hover:bg-zinc-700 text-sm text-zinc-300 rounded-lg transition-all disabled:opacity-50"
                 >
                   {uploading ? 'Uploading...' : 'Replace file'}
                 </button>
@@ -166,9 +166,12 @@ export default function HotspotPanel({
               <button
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
-                className="w-full py-10 border border-dashed border-zinc-700/50 rounded-xl text-sm text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all disabled:opacity-50"
+                className="w-full py-10 border-2 border-dashed border-zinc-700 rounded-xl flex flex-col items-center gap-3 text-zinc-500 hover:text-zinc-200 hover:border-zinc-500 hover:bg-zinc-800/20 transition-all disabled:opacity-50"
               >
-                {uploading ? 'Uploading...' : `Choose ${selectedHotspot.media_type} file`}
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/>
+                </svg>
+                <span className="text-sm font-medium">{uploading ? 'Uploading...' : `Add ${selectedHotspot.media_type}`}</span>
               </button>
             )}
             <input

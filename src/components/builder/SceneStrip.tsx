@@ -25,7 +25,7 @@ export default function SceneStrip({
   return (
     <div className="panel-glass flex items-center px-4 py-4 gap-4 max-w-[80vw] overflow-x-auto">
       {scenes.map(scene => (
-        <div key={scene.id} className="relative group/thumb shrink-0">
+        <div key={scene.id} className="relative group/thumb shrink-0 w-20 h-20">
           <button
             onClick={() => onSelectScene(scene.id)}
             className={`w-20 h-20 rounded-xl overflow-hidden transition-all border-2 ${
@@ -38,9 +38,10 @@ export default function SceneStrip({
             {scene.image_url ? (
               <img src={scene.image_url} alt={scene.title} className="w-full h-full object-cover" />
             ) : (
-              <div className="w-full h-full bg-zinc-800 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-600">
-                  <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/>
+              <div className="w-full h-full bg-zinc-800 flex items-center justify-center"
+                onClick={e => { e.stopPropagation(); replaceTargetRef.current = scene.id; replaceFileRef.current?.click() }}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-500">
+                  <path d="M5 12h14"/><path d="M12 5v14"/>
                 </svg>
               </div>
             )}
@@ -73,7 +74,7 @@ export default function SceneStrip({
       ))}
 
       {/* Add scene — wrapped same as thumbnails for alignment */}
-      <div className="relative shrink-0">
+      <div className="relative shrink-0 w-20 h-20">
         <button
           onClick={() => addFileRef.current?.click()}
           className="w-20 h-20 rounded-xl border-2 border-dashed border-zinc-600 flex items-center justify-center text-zinc-500 hover:text-zinc-200 hover:border-zinc-400 hover:bg-zinc-800/30 transition-all"

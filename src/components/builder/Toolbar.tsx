@@ -1,17 +1,13 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 interface ToolbarProps {
   sceneTitle: string
   onSceneTitleChange: (title: string) => void
   placementMode: boolean
   onTogglePlacement: () => void
-  onUploadImage: (file: File) => void
   onPreview: () => void
   onPreviewIgloo: () => void
   onBack: () => void
-  saving: boolean
-  lastSaved: Date | null
-  uploading: boolean
 }
 
 export default function Toolbar({
@@ -19,15 +15,10 @@ export default function Toolbar({
   onSceneTitleChange,
   placementMode,
   onTogglePlacement,
-  onUploadImage,
   onPreview,
   onPreviewIgloo,
   onBack,
-  saving: _saving,
-  lastSaved: _lastSaved,
-  uploading,
 }: ToolbarProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null)
   const [expanded, setExpanded] = useState(false)
 
   return (
@@ -70,26 +61,6 @@ export default function Toolbar({
         expanded={expanded}
         onClick={onTogglePlacement}
         active={placementMode}
-      />
-
-      {/* Upload 360 */}
-      <ToolButton
-        icon={<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>}
-        label={uploading ? 'Uploading...' : 'Upload 360°'}
-        expanded={expanded}
-        onClick={() => fileInputRef.current?.click()}
-        disabled={uploading}
-      />
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        onChange={e => {
-          const file = e.target.files?.[0]
-          if (file) onUploadImage(file)
-          e.target.value = ''
-        }}
-        className="hidden"
       />
 
       <div className="mx-4 h-px bg-zinc-800/50" />
