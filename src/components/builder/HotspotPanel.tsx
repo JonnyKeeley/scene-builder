@@ -1,5 +1,6 @@
 import { useRef } from 'react'
-import type { Hotspot, MediaType } from '@/types/database'
+import type { Hotspot, MediaType, ChartData } from '@/types/database'
+import ChartEditor from './ChartEditor'
 
 interface HotspotPanelProps {
   hotspots: Hotspot[]
@@ -107,6 +108,7 @@ export default function HotspotPanel({
             <option value="image">Image</option>
             <option value="youtube">YouTube</option>
             <option value="video">Video</option>
+            <option value="chart">Chart</option>
           </select>
         </div>
 
@@ -162,6 +164,13 @@ export default function HotspotPanel({
               className="hidden"
             />
           </div>
+        )}
+
+        {selectedHotspot.media_type === 'chart' && (
+          <ChartEditor
+            value={selectedHotspot.media_url ? (() => { try { return JSON.parse(selectedHotspot.media_url) as ChartData } catch { return null } })() : null}
+            onChange={(chartData) => onUpdateHotspot(selectedHotspot.id, { media_url: JSON.stringify(chartData) })}
+          />
         )}
 
         <button

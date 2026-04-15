@@ -1,4 +1,12 @@
-export type MediaType = 'image' | 'youtube' | 'video'
+export type MediaType = 'image' | 'youtube' | 'video' | 'chart'
+
+export type ChartType = 'bar' | 'pie'
+
+export interface ChartData {
+  type: ChartType
+  labels: string[]
+  values: number[]
+}
 
 export interface Project {
   id: string

@@ -1,4 +1,5 @@
-import type { Hotspot } from '@/types/database'
+import type { Hotspot, ChartData } from '@/types/database'
+import ChartRenderer from './ChartRenderer'
 
 interface HotspotOverlayProps {
   hotspot: Hotspot
@@ -14,7 +15,8 @@ function extractYouTubeId(url: string): string | null {
 
 export default function HotspotOverlay({ hotspot, onClose }: HotspotOverlayProps) {
   const hasVideo = hotspot.media_type === 'youtube' || hotspot.media_type === 'video'
-  const widthClass = hasVideo ? 'w-96' : 'w-72'
+  const hasChart = hotspot.media_type === 'chart'
+  const widthClass = hasVideo || hasChart ? 'w-96' : 'w-72'
 
   return (
     <div className={`${widthClass} bg-black/75 backdrop-blur-md rounded-xl border border-white/15 shadow-2xl pointer-events-none`}>
@@ -72,6 +74,15 @@ export default function HotspotOverlay({ hotspot, onClose }: HotspotOverlayProps
               className="w-full rounded-lg"
             />
           )}
+
+          {hotspot.media_type === 'chart' && hotspot.media_url && (() => {
+            try {
+              const chartData = JSON.parse(hotspot.media_url) as ChartData
+              return <ChartRenderer data={chartData} />
+            } catch {
+              return null
+            }
+          })()}
         </div>
       </div>
     </div>
