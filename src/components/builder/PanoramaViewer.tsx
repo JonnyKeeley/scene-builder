@@ -185,20 +185,20 @@ export default function PanoramaViewer({
       const position = pitchYawToCartesian(hotspot.pitch, hotspot.yaw)
       const isSelected = hotspot.id === selectedHotspotId
 
-      // Red outer circle
-      const markerGeo = new THREE.SphereGeometry(isSelected ? 120 : 100, 24, 24)
+      // Red outer circle — JUMBO
+      const markerGeo = new THREE.SphereGeometry(isSelected ? 200 : 160, 24, 24)
       const markerMat = new THREE.MeshBasicMaterial({
         color: 0xef4444,
         transparent: true,
-        opacity: isSelected ? 1 : 0.9,
+        opacity: isSelected ? 1 : 0.95,
       })
       const marker = new THREE.Mesh(markerGeo, markerMat)
       marker.position.copy(position)
       marker.userData.hotspotId = hotspot.id
       group.add(marker)
 
-      // White center dot
-      const dotGeo = new THREE.SphereGeometry(isSelected ? 45 : 35, 16, 16)
+      // White center dot — solid, visible
+      const dotGeo = new THREE.SphereGeometry(isSelected ? 70 : 55, 16, 16)
       const dotMat = new THREE.MeshBasicMaterial({ color: 0xffffff })
       const dot = new THREE.Mesh(dotGeo, dotMat)
       dot.position.copy(position)
@@ -206,11 +206,11 @@ export default function PanoramaViewer({
       group.add(dot)
 
       // Outer glow ring
-      const ringGeo = new THREE.RingGeometry(isSelected ? 140 : 120, isSelected ? 160 : 140, 32)
+      const ringGeo = new THREE.RingGeometry(isSelected ? 220 : 180, isSelected ? 250 : 210, 32)
       const ringMat = new THREE.MeshBasicMaterial({
         color: 0xef4444,
         transparent: true,
-        opacity: 0.25,
+        opacity: 0.2,
         side: THREE.DoubleSide,
       })
       const ring = new THREE.Mesh(ringGeo, ringMat)
