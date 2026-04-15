@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 interface ToolbarProps {
   projectTitle: string
+  onProjectTitleChange: (title: string) => void
   placementMode: boolean
   onTogglePlacement: () => void
   onPreview: () => void
@@ -11,6 +12,7 @@ interface ToolbarProps {
 
 export default function Toolbar({
   projectTitle,
+  onProjectTitleChange,
   placementMode,
   onTogglePlacement,
   onPreview,
@@ -26,10 +28,15 @@ export default function Toolbar({
       onMouseEnter={() => setExpanded(true)}
       onMouseLeave={() => setExpanded(false)}
     >
-      {/* Project name */}
+      {/* Project name — editable */}
       <div className="px-4 py-3 h-[44px] flex items-center">
         {expanded ? (
-          <span className="text-sm font-semibold text-zinc-50 truncate">{projectTitle}</span>
+          <input
+            type="text"
+            value={projectTitle}
+            onChange={e => onProjectTitleChange(e.target.value)}
+            className="bg-transparent text-sm font-semibold text-zinc-50 focus:outline-none w-full truncate"
+          />
         ) : (
           <div className="w-7 h-7 mx-auto rounded-lg bg-zinc-700/50 flex items-center justify-center">
             <span className="text-sm text-zinc-300 font-semibold">{projectTitle.charAt(0).toUpperCase()}</span>

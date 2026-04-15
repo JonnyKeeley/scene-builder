@@ -32,6 +32,7 @@ type Action =
   | { type: 'UPDATE_SCENE'; sceneId: string; updates: Partial<Scene> }
   | { type: 'ADD_SCENE'; scene: Scene }
   | { type: 'DELETE_SCENE'; sceneId: string }
+  | { type: 'UPDATE_PROJECT_TITLE'; title: string }
 
 function reducer(state: BuilderState, action: Action): BuilderState {
   switch (action.type) {
@@ -108,6 +109,8 @@ function reducer(state: BuilderState, action: Action): BuilderState {
         selectedHotspotId: null,
       }
     }
+    case 'UPDATE_PROJECT_TITLE':
+      return { ...state, project: state.project ? { ...state.project, title: action.title } : null }
     default:
       return state
   }
@@ -208,6 +211,14 @@ export default function SceneBuilder() {
       if (!activeScene) return
       await supabase.from('scenes').update({ title }).eq('id', activeScene.id)
     }, [activeScene?.id])
+  )
+
+  useAutoSave(
+    state.project?.title ?? '',
+    useCallback(async (title: string) => {
+      if (!projectId) return
+      await supabase.from('projects').update({ title }).eq('id', projectId)
+    }, [projectId])
   )
 
   useAutoSave(
@@ -344,6 +355,7 @@ export default function SceneBuilder() {
       <div className={`absolute top-4 left-4 z-10 transition-opacity duration-300 ${state.placementMode ? '' : ''}`}>
         <Toolbar
           projectTitle={state.project?.title ?? ''}
+          onProjectTitleChange={title => dispatch({ type: 'UPDATE_PROJECT_TITLE', title })}
           placementMode={state.placementMode}
           onTogglePlacement={() => dispatch({ type: 'TOGGLE_PLACEMENT' })}
           onPreview={() => window.open(`/play/${projectId}`, '_blank')}
