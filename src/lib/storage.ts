@@ -1,12 +1,14 @@
 import { supabase } from './supabase'
+import { compressImage } from './imageCompression'
 
 export async function uploadPanorama(file: File, userId: string): Promise<string> {
-  const ext = file.name.split('.').pop()
+  const compressed = await compressImage(file)
+  const ext = compressed.name.split('.').pop()
   const fileName = `${userId}/${crypto.randomUUID()}.${ext}`
 
   const { error } = await supabase.storage
     .from('panoramas')
-    .upload(fileName, file, { upsert: false })
+    .upload(fileName, compressed, { upsert: false })
 
   if (error) throw error
 
@@ -18,12 +20,14 @@ export async function uploadPanorama(file: File, userId: string): Promise<string
 }
 
 export async function uploadMedia(file: File, userId: string): Promise<string> {
-  const ext = file.name.split('.').pop()
+  // Compress images, pass through video files
+  const processed = file.type.startsWith('image/') ? await compressImage(file) : file
+  const ext = processed.name.split('.').pop()
   const fileName = `${userId}/media/${crypto.randomUUID()}.${ext}`
 
   const { error } = await supabase.storage
     .from('panoramas')
-    .upload(fileName, file, { upsert: false })
+    .upload(fileName, processed, { upsert: false })
 
   if (error) throw error
 
