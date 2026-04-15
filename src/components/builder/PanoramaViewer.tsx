@@ -197,14 +197,15 @@ export default function PanoramaViewer({
       marker.userData.hotspotId = hotspot.id
       group.add(marker)
 
-      // White center dot — offset towards camera so it renders in front of red
-      const dotGeo = new THREE.SphereGeometry(isSelected ? 100 : 80, 16, 16)
-      const dotMat = new THREE.MeshBasicMaterial({ color: 0xffffff, depthTest: false })
-      dotMat.depthWrite = false
+      // White center disc — flat circle facing camera origin, in front of red sphere
+      const dotGeo = new THREE.CircleGeometry(isSelected ? 80 : 60, 32)
+      const dotMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide })
       const dot = new THREE.Mesh(dotGeo, dotMat)
-      dot.position.copy(position).normalize().multiplyScalar(SPHERE_RADIUS - 50)
+      // Position slightly in front of the red sphere (towards camera at 0,0,0)
+      const dir = position.clone().normalize()
+      dot.position.copy(dir.multiplyScalar(SPHERE_RADIUS - 200))
+      dot.lookAt(0, 0, 0)
       dot.userData.hotspotId = hotspot.id
-      dot.renderOrder = 1
       group.add(dot)
 
       // Outer glow ring
