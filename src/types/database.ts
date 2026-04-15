@@ -1,4 +1,4 @@
-export type MediaType = 'image' | 'youtube' | 'video' | 'chart'
+export type MediaType = 'image' | 'youtube' | 'video' | 'chart' | 'gallery'
 
 export type ChartType = 'bar' | 'pie'
 

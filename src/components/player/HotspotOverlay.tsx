@@ -16,7 +16,8 @@ function extractYouTubeId(url: string): string | null {
 export default function HotspotOverlay({ hotspot, onClose }: HotspotOverlayProps) {
   const hasVideo = hotspot.media_type === 'youtube' || hotspot.media_type === 'video'
   const hasChart = hotspot.media_type === 'chart'
-  const widthClass = hasVideo || hasChart ? 'w-96' : 'w-72'
+  const hasGallery = hotspot.media_type === 'gallery'
+  const widthClass = hasVideo || hasChart || hasGallery ? 'w-96' : 'w-72'
 
   return (
     <div className={`${widthClass} bg-black/75 backdrop-blur-md rounded-xl border border-white/15 shadow-2xl pointer-events-none`}>
@@ -79,6 +80,22 @@ export default function HotspotOverlay({ hotspot, onClose }: HotspotOverlayProps
             try {
               const chartData = JSON.parse(hotspot.media_url) as ChartData
               return <ChartRenderer data={chartData} />
+            } catch {
+              return null
+            }
+          })()}
+
+          {hotspot.media_type === 'gallery' && hotspot.media_url && (() => {
+            try {
+              const images = JSON.parse(hotspot.media_url) as string[]
+              if (!images.length) return null
+              return (
+                <div className="grid grid-cols-2 gap-1.5">
+                  {images.map((url, i) => (
+                    <img key={i} src={url} alt="" className="w-full aspect-square object-cover rounded-lg" />
+                  ))}
+                </div>
+              )
             } catch {
               return null
             }

@@ -274,8 +274,18 @@ export default function SceneBuilder() {
   const handleUploadMedia = useCallback(async (hotspotId: string, file: File) => {
     if (!user) return
     const url = await upload(() => uploadMedia(file, user.id))
-    if (url) dispatch({ type: 'UPDATE_HOTSPOT', hotspotId, updates: { media_url: url } })
-  }, [user, upload])
+    if (!url) return
+
+    // Check if this hotspot is a gallery — append to array instead of replacing
+    const hotspot = Object.values(state.hotspots).flat().find(h => h.id === hotspotId)
+    if (hotspot?.media_type === 'gallery') {
+      const existing: string[] = hotspot.media_url ? (() => { try { return JSON.parse(hotspot.media_url) } catch { return [] } })() : []
+      const updated = JSON.stringify([...existing, url])
+      dispatch({ type: 'UPDATE_HOTSPOT', hotspotId, updates: { media_url: updated } })
+    } else {
+      dispatch({ type: 'UPDATE_HOTSPOT', hotspotId, updates: { media_url: url } })
+    }
+  }, [user, upload, state.hotspots])
 
   if (state.loading) {
     return (

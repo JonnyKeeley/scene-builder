@@ -8,6 +8,7 @@ const MEDIA_OPTIONS: { value: MediaType | ''; label: string }[] = [
   { value: 'youtube', label: 'YouTube' },
   { value: 'video', label: 'Video' },
   { value: 'chart', label: 'Chart' },
+  { value: 'gallery', label: 'Gallery' },
 ]
 
 interface HotspotPanelProps {
@@ -30,6 +31,7 @@ export default function HotspotPanel({
   uploading,
 }: HotspotPanelProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const galleryFileRef = useRef<HTMLInputElement>(null)
 
   if (!selectedHotspot) {
     return (
@@ -185,6 +187,59 @@ export default function HotspotPanel({
             onChange={(chartData) => onUpdateHotspot(selectedHotspot.id, { media_url: JSON.stringify(chartData) })}
           />
         )}
+
+        {selectedHotspot.media_type === 'gallery' && (() => {
+          const images: string[] = selectedHotspot.media_url ? (() => { try { return JSON.parse(selectedHotspot.media_url) } catch { return [] } })() : []
+          return (
+            <div>
+              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-3">Gallery images</label>
+              {images.length > 0 && (
+                <div className="grid grid-cols-3 gap-2 mb-3">
+                  {images.map((url, i) => (
+                    <div key={i} className="relative group/gimg aspect-square rounded-lg overflow-hidden">
+                      <img src={url} alt="" className="w-full h-full object-cover" />
+                      <button
+                        onClick={() => {
+                          const next = images.filter((_, idx) => idx !== i)
+                          onUpdateHotspot(selectedHotspot.id, { media_url: JSON.stringify(next) })
+                        }}
+                        className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 flex items-center justify-center text-white opacity-0 group-hover/gimg:opacity-100 transition-opacity"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                        </svg>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <button
+                onClick={() => galleryFileRef.current?.click()}
+                disabled={uploading}
+                className="w-full py-6 border-2 border-dashed border-zinc-700 rounded-xl flex flex-col items-center gap-2 text-zinc-500 hover:text-zinc-200 hover:border-zinc-500 hover:bg-zinc-800/20 transition-all disabled:opacity-50"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14"/><path d="M12 5v14"/>
+                </svg>
+                <span className="text-sm font-medium">{uploading ? 'Uploading...' : 'Add images'}</span>
+              </button>
+              <input
+                ref={galleryFileRef}
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={async e => {
+                  const files = Array.from(e.target.files || [])
+                  for (const file of files) {
+                    onUploadMedia(selectedHotspot.id, file)
+                  }
+                  e.target.value = ''
+                }}
+                className="hidden"
+              />
+            </div>
+          )
+        })()}
 
         <button
           onClick={() => onSelectHotspot(null)}
