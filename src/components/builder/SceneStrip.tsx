@@ -7,6 +7,7 @@ interface SceneStripProps {
   onSelectScene: (sceneId: string) => void
   onAddScene: (file: File) => void
   onDeleteScene: (sceneId: string) => void
+  onReplaceImage: (sceneId: string, file: File) => void
 }
 
 export default function SceneStrip({
@@ -15,8 +16,11 @@ export default function SceneStrip({
   onSelectScene,
   onAddScene,
   onDeleteScene,
+  onReplaceImage,
 }: SceneStripProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const addFileRef = useRef<HTMLInputElement>(null)
+  const replaceFileRef = useRef<HTMLInputElement>(null)
+  const replaceTargetRef = useRef<string | null>(null)
 
   return (
     <div className="h-20 bg-zinc-900 border-t border-zinc-800 flex items-center px-4 gap-3 overflow-x-auto shrink-0">
@@ -30,20 +34,39 @@ export default function SceneStrip({
               : 'bg-zinc-800 border border-zinc-700 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200'
           }`}
         >
-          {scenes.length > 1 && (
+          {/* Action buttons — top right */}
+          <div className="absolute -top-2 -right-2 flex gap-0.5 opacity-0 group-hover/scene:opacity-100 transition-all">
+            {/* Replace image */}
             <button
               onClick={e => {
                 e.stopPropagation()
-                onDeleteScene(scene.id)
+                replaceTargetRef.current = scene.id
+                replaceFileRef.current?.click()
               }}
-              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-zinc-950 border border-zinc-700 flex items-center justify-center text-zinc-500 hover:text-red-400 hover:border-red-400 opacity-0 group-hover/scene:opacity-100 transition-all"
-              title="Delete scene"
+              className="w-5 h-5 rounded-full bg-zinc-950 border border-zinc-700 flex items-center justify-center text-zinc-500 hover:text-teal-400 hover:border-teal-400 transition-all"
+              title="Replace 360 image"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+              <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>
               </svg>
             </button>
-          )}
+            {/* Delete scene */}
+            {scenes.length > 1 && (
+              <button
+                onClick={e => {
+                  e.stopPropagation()
+                  onDeleteScene(scene.id)
+                }}
+                className="w-5 h-5 rounded-full bg-zinc-950 border border-zinc-700 flex items-center justify-center text-zinc-500 hover:text-red-400 hover:border-red-400 transition-all"
+                title="Delete scene"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                </svg>
+              </button>
+            )}
+          </div>
+
           {scene.image_url ? (
             <img
               src={scene.image_url}
@@ -62,7 +85,7 @@ export default function SceneStrip({
       ))}
 
       <button
-        onClick={() => fileInputRef.current?.click()}
+        onClick={() => addFileRef.current?.click()}
         className="shrink-0 h-14 w-14 rounded-md border border-dashed border-zinc-700 flex items-center justify-center text-zinc-600 hover:text-zinc-300 hover:border-zinc-600 transition-all"
         title="Add scene"
       >
@@ -70,14 +93,29 @@ export default function SceneStrip({
           <path d="M5 12h14"/><path d="M12 5v14"/>
         </svg>
       </button>
+
+      {/* Hidden file inputs */}
       <input
-        ref={fileInputRef}
+        ref={addFileRef}
         type="file"
         accept="image/jpeg,image/png,image/webp"
         onChange={e => {
           const file = e.target.files?.[0]
           if (file) onAddScene(file)
           e.target.value = ''
+        }}
+        className="hidden"
+      />
+      <input
+        ref={replaceFileRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        onChange={e => {
+          const file = e.target.files?.[0]
+          const sceneId = replaceTargetRef.current
+          if (file && sceneId) onReplaceImage(sceneId, file)
+          e.target.value = ''
+          replaceTargetRef.current = null
         }}
         className="hidden"
       />

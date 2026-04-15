@@ -245,6 +245,15 @@ export default function SceneBuilder() {
     dispatch({ type: 'DELETE_SCENE', sceneId })
   }, [])
 
+  const handleReplaceImage = useCallback(async (sceneId: string, file: File) => {
+    if (!user) return
+    const url = await upload(() => uploadPanorama(file, user.id))
+    if (url) {
+      await supabase.from('scenes').update({ image_url: url }).eq('id', sceneId)
+      dispatch({ type: 'UPDATE_SCENE', sceneId, updates: { image_url: url } })
+    }
+  }, [user, upload])
+
   const handleUploadMedia = useCallback(async (hotspotId: string, file: File) => {
     if (!user) return
     const url = await upload(() => uploadMedia(file, user.id))
@@ -325,6 +334,7 @@ export default function SceneBuilder() {
         onSelectScene={id => dispatch({ type: 'SET_ACTIVE_SCENE', sceneId: id })}
         onAddScene={handleAddScene}
         onDeleteScene={handleDeleteScene}
+        onReplaceImage={handleReplaceImage}
       />
     </div>
   )
