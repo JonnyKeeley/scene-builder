@@ -272,6 +272,7 @@ export default function SceneBuilder() {
         onTogglePlacement={() => dispatch({ type: 'TOGGLE_PLACEMENT' })}
         onUploadImage={handleUploadImage}
         onPreview={() => window.open(`/play/${projectId}`, '_blank')}
+        onPreviewIgloo={() => window.open(`/play/${projectId}?mode=igloo`, '_blank')}
         onBack={() => navigate('/')}
         saving={sceneTitleSave.saving}
         lastSaved={sceneTitleSave.lastSaved}

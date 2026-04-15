@@ -7,6 +7,7 @@ interface ToolbarProps {
   onTogglePlacement: () => void
   onUploadImage: (file: File) => void
   onPreview: () => void
+  onPreviewIgloo: () => void
   onBack: () => void
   saving: boolean
   lastSaved: Date | null
@@ -20,6 +21,7 @@ export default function Toolbar({
   onTogglePlacement,
   onUploadImage,
   onPreview,
+  onPreviewIgloo,
   onBack,
   saving,
   lastSaved,
@@ -90,9 +92,15 @@ export default function Toolbar({
 
       <button
         onClick={onPreview}
-        className="px-3 py-1.5 text-sm bg-green-600 hover:bg-green-700 text-white rounded font-medium transition-colors"
+        className="px-3 py-1.5 text-sm text-slate-300 hover:text-white hover:bg-slate-700 rounded transition-colors"
       >
         Preview
+      </button>
+      <button
+        onClick={onPreviewIgloo}
+        className="px-3 py-1.5 text-sm bg-green-600 hover:bg-green-700 text-white rounded font-medium transition-colors"
+      >
+        Igloo
       </button>
     </div>
   )
