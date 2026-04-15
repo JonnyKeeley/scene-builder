@@ -23,7 +23,7 @@ export default function SceneStrip({
   const replaceTargetRef = useRef<string | null>(null)
 
   return (
-    <div className="panel-glass flex items-center px-3 py-3 gap-3 max-w-[80vw] overflow-x-auto">
+    <div className="panel-glass flex items-center px-4 py-4 gap-4 max-w-[80vw] overflow-x-auto">
       {scenes.map(scene => (
         <div key={scene.id} className="relative group/thumb shrink-0">
           <button
@@ -75,10 +75,10 @@ export default function SceneStrip({
       {/* Add scene */}
       <button
         onClick={() => addFileRef.current?.click()}
-        className="w-20 h-20 shrink-0 rounded-xl border-2 border-dashed border-zinc-700 flex items-center justify-center text-zinc-600 hover:text-zinc-300 hover:border-zinc-500 transition-all"
+        className="w-20 h-20 shrink-0 rounded-xl border-2 border-dashed border-zinc-600 flex items-center justify-center text-zinc-500 hover:text-zinc-200 hover:border-zinc-400 hover:bg-zinc-800/30 transition-all"
         title="Add scene"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M5 12h14"/><path d="M12 5v14"/>
         </svg>
       </button>
