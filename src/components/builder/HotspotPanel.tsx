@@ -163,6 +163,13 @@ export default function HotspotPanel({
             />
           </div>
         )}
+
+        <button
+          onClick={() => onSelectHotspot(null)}
+          className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded font-medium transition-colors mt-2"
+        >
+          Done
+        </button>
       </div>
     </div>
   )
