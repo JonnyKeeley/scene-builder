@@ -1,8 +1,7 @@
 import { useState } from 'react'
 
 interface ToolbarProps {
-  sceneTitle: string
-  onSceneTitleChange: (title: string) => void
+  projectTitle: string
   placementMode: boolean
   onTogglePlacement: () => void
   onPreview: () => void
@@ -11,8 +10,7 @@ interface ToolbarProps {
 }
 
 export default function Toolbar({
-  sceneTitle,
-  onSceneTitleChange,
+  projectTitle,
   placementMode,
   onTogglePlacement,
   onPreview,
@@ -28,6 +26,17 @@ export default function Toolbar({
       onMouseEnter={() => setExpanded(true)}
       onMouseLeave={() => setExpanded(false)}
     >
+      {/* Project name */}
+      <div className="px-4 py-3 h-[44px] flex items-center">
+        {expanded ? (
+          <span className="text-sm font-semibold text-zinc-50 truncate">{projectTitle}</span>
+        ) : (
+          <div className="w-7 h-7 mx-auto rounded-lg bg-zinc-700/50 flex items-center justify-center">
+            <span className="text-sm text-zinc-300 font-semibold">{projectTitle.charAt(0).toUpperCase()}</span>
+          </div>
+        )}
+      </div>
+
       {/* Back */}
       <ToolButton
         icon={<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>}
@@ -35,22 +44,6 @@ export default function Toolbar({
         expanded={expanded}
         onClick={onBack}
       />
-
-      {/* Scene title — fixed height so expand doesn't shift layout */}
-      <div className="px-4 py-3 h-[52px] flex items-center">
-        {expanded ? (
-          <input
-            type="text"
-            value={sceneTitle}
-            onChange={e => onSceneTitleChange(e.target.value)}
-            className="bg-transparent text-zinc-50 text-sm font-medium focus:outline-none w-full truncate"
-          />
-        ) : (
-          <div className="w-7 h-7 mx-auto rounded-lg bg-zinc-700/50 flex items-center justify-center">
-            <span className="text-sm text-zinc-300 font-semibold">{sceneTitle.charAt(0).toUpperCase()}</span>
-          </div>
-        )}
-      </div>
 
       <div className="mx-4 h-px bg-zinc-800/50" />
 

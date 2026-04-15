@@ -343,10 +343,7 @@ export default function SceneBuilder() {
       {/* Floating toolbar — top left, vertical */}
       <div className={`absolute top-4 left-4 z-10 transition-opacity duration-300 ${state.placementMode ? '' : ''}`}>
         <Toolbar
-          sceneTitle={activeScene?.title ?? ''}
-          onSceneTitleChange={title => {
-            if (activeScene) dispatch({ type: 'UPDATE_SCENE', sceneId: activeScene.id, updates: { title } })
-          }}
+          projectTitle={state.project?.title ?? ''}
           placementMode={state.placementMode}
           onTogglePlacement={() => dispatch({ type: 'TOGGLE_PLACEMENT' })}
           onPreview={() => window.open(`/play/${projectId}`, '_blank')}
