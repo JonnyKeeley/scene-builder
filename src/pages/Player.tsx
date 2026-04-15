@@ -122,12 +122,15 @@ export default function Player() {
               className="absolute -translate-x-1/2 -translate-y-1/2 group"
               style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
             >
-              <div className={`w-4 h-4 rounded-full border-2 transition-all ${
+              {/* Red circle with white dot */}
+              <div className={`rounded-full flex items-center justify-center transition-all ${
                 isSelected
-                  ? 'bg-teal-400 border-teal-300 scale-125'
-                  : 'bg-teal-500/80 border-teal-400 hover:bg-teal-400 hover:scale-110'
-              }`} />
-              <div className={`absolute w-7 h-7 -top-1.5 -left-1.5 rounded-full border border-teal-400/30 animate-ping ${
+                  ? 'w-8 h-8 bg-red-500 scale-110'
+                  : 'w-7 h-7 bg-red-500/90 hover:bg-red-500 hover:scale-110'
+              }`}>
+                <div className="w-2 h-2 rounded-full bg-white" />
+              </div>
+              <div className={`absolute w-10 h-10 -top-1.5 -left-1.5 rounded-full border-2 border-red-500/30 animate-ping ${
                 isSelected ? 'hidden' : ''
               }`} />
             </button>

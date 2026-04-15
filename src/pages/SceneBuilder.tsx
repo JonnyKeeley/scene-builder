@@ -341,7 +341,7 @@ export default function SceneBuilder() {
 
       {/* Floating hotspot panel — right side, slides in/out */}
       <div
-        className={`absolute top-4 right-4 bottom-24 z-10 w-96 transition-all duration-300 ${
+        className={`absolute top-4 right-4 bottom-32 z-10 w-96 transition-all duration-300 ${
           panelOpen
             ? 'translate-x-0 opacity-100'
             : 'translate-x-8 opacity-0 pointer-events-none'

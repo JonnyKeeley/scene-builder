@@ -39,6 +39,11 @@ body {
   z-index: 1;
 }
 
+/* Placement mode cursor — red circle with white cross */
+.cursor-place {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='%23ef4444' fill-opacity='0.9'/%3E%3Cline x1='10' y1='16' x2='22' y2='16' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3Cline x1='16' y1='10' x2='16' y2='22' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") 16 16, crosshair;
+}
+
 /* Placement mode pulse */
 @keyframes placement-pulse {
   0%, 100% { box-shadow: inset 0 0 0 2px rgba(20, 184, 166, 0.15); }

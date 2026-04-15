@@ -180,14 +180,15 @@ export default function PanoramaViewer({
       group.remove(child)
     }
 
-    // Create new markers
+    // Create new markers — red circle with white dot
     hotspots.forEach(hotspot => {
       const position = pitchYawToCartesian(hotspot.pitch, hotspot.yaw)
       const isSelected = hotspot.id === selectedHotspotId
 
-      const markerGeo = new THREE.SphereGeometry(isSelected ? 80 : 60, 16, 16)
+      // Red outer circle
+      const markerGeo = new THREE.SphereGeometry(isSelected ? 120 : 100, 24, 24)
       const markerMat = new THREE.MeshBasicMaterial({
-        color: isSelected ? 0x0d9488 : 0x14b8a6,
+        color: 0xef4444,
         transparent: true,
         opacity: isSelected ? 1 : 0.9,
       })
@@ -196,12 +197,20 @@ export default function PanoramaViewer({
       marker.userData.hotspotId = hotspot.id
       group.add(marker)
 
-      // Outer ring for visibility
-      const ringGeo = new THREE.RingGeometry(isSelected ? 90 : 70, isSelected ? 110 : 85, 32)
+      // White center dot
+      const dotGeo = new THREE.SphereGeometry(isSelected ? 45 : 35, 16, 16)
+      const dotMat = new THREE.MeshBasicMaterial({ color: 0xffffff })
+      const dot = new THREE.Mesh(dotGeo, dotMat)
+      dot.position.copy(position)
+      dot.userData.hotspotId = hotspot.id
+      group.add(dot)
+
+      // Outer glow ring
+      const ringGeo = new THREE.RingGeometry(isSelected ? 140 : 120, isSelected ? 160 : 140, 32)
       const ringMat = new THREE.MeshBasicMaterial({
-        color: isSelected ? 0x0d9488 : 0x14b8a6,
+        color: 0xef4444,
         transparent: true,
-        opacity: 0.3,
+        opacity: 0.25,
         side: THREE.DoubleSide,
       })
       const ring = new THREE.Mesh(ringGeo, ringMat)
@@ -283,7 +292,7 @@ export default function PanoramaViewer({
     <div className="relative w-full h-full overflow-hidden">
       <div
         ref={containerRef}
-        className={`w-full h-full ${placementMode ? 'cursor-crosshair' : 'cursor-grab active:cursor-grabbing'}`}
+        className={`w-full h-full ${placementMode ? 'cursor-place' : 'cursor-grab active:cursor-grabbing'}`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
