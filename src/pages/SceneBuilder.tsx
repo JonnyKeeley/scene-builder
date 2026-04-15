@@ -376,21 +376,6 @@ export default function SceneBuilder() {
         </div>
       </div>
 
-      {/* Panel toggle tab when closed */}
-      {!panelOpen && activeHotspots.length > 0 && (
-        <button
-          onClick={() => {
-            if (activeHotspots[0]) dispatch({ type: 'SELECT_HOTSPOT', hotspotId: activeHotspots[0].id })
-          }}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full panel-glass flex items-center justify-center text-zinc-500 hover:text-teal-400 transition-all"
-          title="Show hotspot panel"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="m15 18-6-6 6-6"/>
-          </svg>
-        </button>
-      )}
-
       {/* Floating scene strip — bottom centre */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
         <SceneStrip
