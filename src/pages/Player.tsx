@@ -6,12 +6,13 @@ import PanoramaViewer from '@/components/builder/PanoramaViewer'
 import HotspotOverlay from '@/components/player/HotspotOverlay'
 
 function pitchYawToPercent(pitch: number, yaw: number): { x: number; y: number } {
-  // The sphere in PanoramaViewer is inverted (scale -1,1,1) so yaw from
-  // raycasting is mirrored relative to the equirectangular image UV.
-  // Negate yaw to correct for the inversion.
-  const correctedYaw = -yaw
+  // Stored yaw = atan2(x, z) from raycasting on the inverted sphere.
+  // THREE.js SphereGeometry UV u-coordinate uses atan2(z, x) = π/2 - yaw.
+  // Wrap to [0, 2π] range for the percentage.
+  const TWO_PI = 2 * Math.PI
+  const u = (((Math.PI / 2 - yaw) % TWO_PI) + TWO_PI) % TWO_PI
   return {
-    x: ((correctedYaw + Math.PI) / (2 * Math.PI)) * 100,
+    x: (u / TWO_PI) * 100,
     y: ((Math.PI / 2 - pitch) / Math.PI) * 100,
   }
 }
