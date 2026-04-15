@@ -3,15 +3,15 @@ import type { Hotspot, MediaType, ChartData, MapData } from '@/types/database'
 import ChartEditor from './ChartEditor'
 import MapEditor from './MapEditor'
 
-const MEDIA_OPTIONS: { value: MediaType | ''; label: string }[] = [
-  { value: '', label: 'Text' },
-  { value: 'image', label: 'Image' },
-  { value: 'youtube', label: 'YouTube' },
-  { value: 'video', label: 'Video' },
-  { value: 'chart', label: 'Chart' },
-  { value: 'gallery', label: 'Gallery' },
-  { value: 'map', label: 'Map' },
-  { value: 'audio', label: 'Audio' },
+const MEDIA_OPTIONS: { value: MediaType | ''; label: string; icon: string }[] = [
+  { value: '', label: 'Text', icon: 'M4 7V4h16v3M9 20h6M12 4v16' },
+  { value: 'image', label: 'Image', icon: 'M21 15V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10m18 0-3.086-3.086a2 2 0 0 0-2.828 0L6 21m15-6v6H3v-6m3 6 7.5-7.5' },
+  { value: 'youtube', label: 'YouTube', icon: 'M2 16V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2Zm8-1.5V9.5l6 3-6 3Z' },
+  { value: 'video', label: 'Video', icon: 'M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Z' },
+  { value: 'chart', label: 'Chart', icon: 'M3 3v18h18M7 16v-3m4 3V8m4 8v-5m4 5V5' },
+  { value: 'gallery', label: 'Gallery', icon: 'M17 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2ZM3 7h2m14 0h2M3 12h2m14 0h2M3 17h2m14 0h2' },
+  { value: 'map', label: 'Map', icon: 'M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z M12 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z' },
+  { value: 'audio', label: 'Audio', icon: 'M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm12-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z' },
 ]
 
 interface HotspotPanelProps {
@@ -107,7 +107,7 @@ export default function HotspotPanel({
           <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-3">
             Media
           </label>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-4 gap-2">
             {MEDIA_OPTIONS.map(opt => (
               <button
                 key={opt.value}
@@ -118,12 +118,15 @@ export default function HotspotPanel({
                     media_url: val ? selectedHotspot.media_url : null,
                   })
                 }}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                className={`flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl text-xs font-medium transition-all ${
                   (selectedHotspot.media_type || '') === opt.value
                     ? 'bg-teal-500/15 text-teal-400 ring-1 ring-teal-500/30'
-                    : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/50'
+                    : 'bg-zinc-800/40 text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/70'
                 }`}
               >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d={opt.icon} />
+                </svg>
                 {opt.label}
               </button>
             ))}
