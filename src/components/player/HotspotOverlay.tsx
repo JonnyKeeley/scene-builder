@@ -13,12 +13,15 @@ function extractYouTubeId(url: string): string | null {
 }
 
 export default function HotspotOverlay({ hotspot, onClose }: HotspotOverlayProps) {
+  const hasVideo = hotspot.media_type === 'youtube' || hotspot.media_type === 'video'
+  const widthClass = hasVideo ? 'w-96' : 'w-72'
+
   return (
-    <div className="w-72 bg-black/75 backdrop-blur-md rounded-xl border border-white/15 shadow-2xl">
+    <div className={`${widthClass} bg-black/75 backdrop-blur-md rounded-xl border border-white/15 shadow-2xl`}>
       {/* Arrow pointing down to hotspot */}
       <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-black/75" />
 
-      <div className="flex flex-col max-h-64">
+      <div className="flex flex-col max-h-[70vh]">
         <div className="flex items-center justify-between px-4 pt-3 pb-1">
           <h2 className="text-sm font-semibold text-white pr-3 truncate">{hotspot.title}</h2>
           <button
@@ -46,21 +49,26 @@ export default function HotspotOverlay({ hotspot, onClose }: HotspotOverlayProps
             />
           )}
 
-          {hotspot.media_type === 'youtube' && hotspot.media_url && (
-            <div className="aspect-video w-full">
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${extractYouTubeId(hotspot.media_url)}`}
-                className="w-full h-full rounded-lg"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-          )}
+          {hotspot.media_type === 'youtube' && hotspot.media_url && (() => {
+            const videoId = extractYouTubeId(hotspot.media_url!)
+            return videoId ? (
+              <div className="aspect-video w-full">
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1`}
+                  className="w-full h-full rounded-lg"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            ) : null
+          })()}
 
           {hotspot.media_type === 'video' && hotspot.media_url && (
             <video
               src={hotspot.media_url}
               controls
+              autoPlay
+              muted
               className="w-full rounded-lg"
             />
           )}
