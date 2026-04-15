@@ -197,8 +197,8 @@ export default function PanoramaViewer({
       marker.userData.hotspotId = hotspot.id
       group.add(marker)
 
-      // White center dot — solid, visible
-      const dotGeo = new THREE.SphereGeometry(isSelected ? 70 : 55, 16, 16)
+      // White center dot — large and visible
+      const dotGeo = new THREE.SphereGeometry(isSelected ? 100 : 80, 16, 16)
       const dotMat = new THREE.MeshBasicMaterial({ color: 0xffffff })
       const dot = new THREE.Mesh(dotGeo, dotMat)
       dot.position.copy(position)
