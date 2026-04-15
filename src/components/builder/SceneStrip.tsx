@@ -28,10 +28,10 @@ export default function SceneStrip({
         <div key={scene.id} className="relative group/thumb shrink-0">
           <button
             onClick={() => onSelectScene(scene.id)}
-            className={`w-20 h-20 rounded-xl overflow-hidden transition-all ${
+            className={`w-20 h-20 rounded-xl overflow-hidden transition-all border-2 ${
               scene.id === activeSceneId
-                ? 'ring-2 ring-teal-500 ring-offset-2 ring-offset-zinc-900'
-                : 'ring-1 ring-zinc-700 hover:ring-zinc-500 hover:scale-105'
+                ? 'border-teal-500'
+                : 'border-zinc-700 hover:border-zinc-500 hover:scale-105'
             }`}
             title={scene.title}
           >
