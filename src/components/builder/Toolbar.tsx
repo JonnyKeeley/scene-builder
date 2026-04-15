@@ -33,7 +33,7 @@ export default function Toolbar({
   return (
     <div
       className="panel-glass flex flex-col items-stretch overflow-hidden transition-all duration-300"
-      style={{ width: expanded ? 200 : 48, transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+      style={{ width: expanded ? 220 : 52, transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
       onMouseEnter={() => setExpanded(true)}
       onMouseLeave={() => setExpanded(false)}
     >
@@ -60,13 +60,13 @@ export default function Toolbar({
           type="text"
           value={sceneTitle}
           onChange={e => onSceneTitleChange(e.target.value)}
-          className={`bg-transparent text-zinc-50 text-[13px] font-medium focus:outline-none w-full truncate ${
+          className={`bg-transparent text-zinc-50 text-sm font-medium focus:outline-none w-full truncate ${
             expanded ? '' : 'opacity-0 pointer-events-none h-0 py-0'
           }`}
         />
         {!expanded && (
           <div className="w-5 h-5 mx-auto rounded bg-zinc-700/50 flex items-center justify-center">
-            <span className="text-[10px] text-zinc-400 font-medium">{sceneTitle.charAt(0).toUpperCase()}</span>
+            <span className="text-xs text-zinc-400 font-medium">{sceneTitle.charAt(0).toUpperCase()}</span>
           </div>
         )}
       </div>
@@ -145,7 +145,7 @@ function ToolButton({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`flex items-center gap-3 px-3 py-2.5 transition-all text-[13px] font-medium disabled:opacity-40 ${
+      className={`flex items-center gap-3 px-3 py-2.5 transition-all text-sm font-medium disabled:opacity-40 ${
         active
           ? 'text-teal-400 bg-teal-500/10'
           : accent

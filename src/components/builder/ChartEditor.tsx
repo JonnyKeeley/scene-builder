@@ -53,13 +53,13 @@ export default function ChartEditor({ value, onChange }: ChartEditorProps) {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <div>
-        <label className="block text-xs font-medium text-zinc-500 mb-1.5">Chart type</label>
+        <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-2">Chart type</label>
         <select
           value={chart.type}
           onChange={e => update({ type: e.target.value as ChartType })}
-          className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-md text-sm text-zinc-50 focus:outline-none focus:ring-1 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all"
+          className="w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800/60 rounded-xl text-sm text-zinc-50 focus:outline-none focus:ring-1 focus:ring-teal-500/40 focus:border-teal-500/40 transition-all"
         >
           <option value="bar">Bar</option>
           <option value="pie">Pie</option>
@@ -67,7 +67,7 @@ export default function ChartEditor({ value, onChange }: ChartEditorProps) {
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-zinc-500 mb-2">Data</label>
+        <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-3">Data</label>
         <div className="space-y-2">
           {chart.labels.map((label, i) => (
             <div key={i} className="flex gap-2 items-center">
@@ -76,21 +76,21 @@ export default function ChartEditor({ value, onChange }: ChartEditorProps) {
                 value={label}
                 onChange={e => updateLabel(i, e.target.value)}
                 placeholder="Label"
-                className="flex-1 px-2 py-1.5 bg-zinc-950 border border-zinc-800 rounded-md text-xs text-zinc-50 focus:outline-none focus:ring-1 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all"
+                className="flex-1 px-3 py-2.5 bg-zinc-950/60 border border-zinc-800/60 rounded-lg text-sm text-zinc-50 focus:outline-none focus:ring-1 focus:ring-teal-500/40 focus:border-teal-500/40 transition-all"
               />
               <input
                 type="number"
                 value={chart.values[i]}
                 onChange={e => updateValue(i, e.target.value)}
                 placeholder="Value"
-                className="w-20 px-2 py-1.5 bg-zinc-950 border border-zinc-800 rounded-md text-xs text-zinc-50 focus:outline-none focus:ring-1 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all"
+                className="w-24 px-3 py-2.5 bg-zinc-950/60 border border-zinc-800/60 rounded-lg text-sm text-zinc-50 focus:outline-none focus:ring-1 focus:ring-teal-500/40 focus:border-teal-500/40 transition-all"
               />
               {chart.labels.length > 1 && (
                 <button
                   onClick={() => removeRow(i)}
-                  className="w-6 h-6 rounded-md flex items-center justify-center text-zinc-600 hover:text-red-400 transition-all"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-zinc-600 hover:text-red-400 hover:bg-red-500/10 transition-all"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
                   </svg>
                 </button>
@@ -100,7 +100,7 @@ export default function ChartEditor({ value, onChange }: ChartEditorProps) {
         </div>
         <button
           onClick={addRow}
-          className="mt-2 text-xs text-teal-400 hover:text-teal-300 transition-colors"
+          className="mt-3 text-sm text-teal-400 hover:text-teal-300 transition-colors"
         >
           + Add row
         </button>

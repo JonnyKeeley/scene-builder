@@ -33,21 +33,21 @@ export default function HotspotPanel({
 
   if (!selectedHotspot) {
     return (
-      <div className="h-full p-4 overflow-y-auto scroll-mask">
-        <p className="text-[11px] font-medium text-zinc-500 uppercase tracking-[0.08em] mb-4">
+      <div className="h-full p-5 overflow-y-auto">
+        <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-4">
           Hotspots
         </p>
         {hotspots.length === 0 ? (
-          <p className="text-[12px] text-zinc-600 leading-relaxed">
-            Press <kbd className="font-mono-caption px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">H</kbd> or use the toolbar to place hotspots.
+          <p className="text-sm text-zinc-500 leading-relaxed">
+            Press <kbd className="font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300 text-xs">H</kbd> or use the toolbar to place hotspots.
           </p>
         ) : (
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             {hotspots.map(h => (
               <button
                 key={h.id}
                 onClick={() => onSelectHotspot(h.id)}
-                className="w-full text-left px-3 py-2 rounded-lg text-[13px] text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 transition-all"
+                className="w-full text-left px-4 py-3 rounded-xl text-sm text-zinc-300 hover:text-zinc-50 hover:bg-zinc-800/60 transition-all"
               >
                 {h.title}
               </button>
@@ -59,54 +59,56 @@ export default function HotspotPanel({
   }
 
   return (
-    <div className="h-full p-4 overflow-y-auto scroll-mask">
-      <div className="flex items-center justify-between mb-4">
+    <div className="h-full p-5 overflow-y-auto">
+      <div className="flex items-center justify-between mb-5">
         <button
           onClick={() => onSelectHotspot(null)}
-          className="text-[12px] text-zinc-500 hover:text-zinc-200 transition-colors flex items-center gap-1"
+          className="text-sm text-zinc-400 hover:text-zinc-100 transition-colors flex items-center gap-1.5"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>
           </svg>
           All hotspots
         </button>
         <button
           onClick={() => onDeleteHotspot(selectedHotspot.id)}
-          className="text-[11px] text-zinc-600 hover:text-red-400 px-2 py-1 rounded-md transition-all"
+          className="text-sm text-zinc-500 hover:text-red-400 hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-all"
         >
           Delete
         </button>
       </div>
 
       <div className="space-y-5">
-        {/* Title — invisible border until focus */}
+        {/* Title */}
         <div>
+          <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-2">Title</label>
           <input
             type="text"
             value={selectedHotspot.title}
             onChange={e => onUpdateHotspot(selectedHotspot.id, { title: e.target.value })}
-            className="w-full bg-transparent text-zinc-50 text-[15px] font-semibold focus:outline-none focus:bg-zinc-800/30 px-2 py-1 -mx-2 rounded-lg transition-all placeholder:text-zinc-600"
+            className="w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800/60 rounded-xl text-base text-zinc-50 focus:outline-none focus:ring-1 focus:ring-teal-500/40 focus:border-teal-500/40 transition-all placeholder:text-zinc-600"
             placeholder="Hotspot title"
           />
         </div>
 
-        {/* Body — invisible border until focus */}
+        {/* Body */}
         <div>
+          <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-2">Description</label>
           <textarea
             value={selectedHotspot.body || ''}
             onChange={e => onUpdateHotspot(selectedHotspot.id, { body: e.target.value || null })}
             rows={4}
-            className="w-full bg-transparent text-[13px] text-zinc-400 focus:outline-none focus:bg-zinc-800/30 px-2 py-1.5 -mx-2 rounded-lg transition-all resize-none leading-relaxed placeholder:text-zinc-600"
+            className="w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800/60 rounded-xl text-sm text-zinc-300 focus:outline-none focus:ring-1 focus:ring-teal-500/40 focus:border-teal-500/40 transition-all resize-none leading-relaxed placeholder:text-zinc-600"
             placeholder="Add a description..."
           />
         </div>
 
         {/* Media type — pill selector */}
         <div>
-          <p className="text-[11px] font-medium text-zinc-500 uppercase tracking-[0.08em] mb-2">
+          <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-3">
             Media
-          </p>
-          <div className="flex flex-wrap gap-1">
+          </label>
+          <div className="flex flex-wrap gap-2">
             {MEDIA_OPTIONS.map(opt => (
               <button
                 key={opt.value}
@@ -117,10 +119,10 @@ export default function HotspotPanel({
                     media_url: val ? selectedHotspot.media_url : null,
                   })
                 }}
-                className={`px-2.5 py-1 rounded-md text-[12px] font-medium transition-all ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   (selectedHotspot.media_type || '') === opt.value
                     ? 'bg-teal-500/15 text-teal-400 ring-1 ring-teal-500/30'
-                    : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50'
+                    : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/50'
                 }`}
               >
                 {opt.label}
@@ -131,12 +133,13 @@ export default function HotspotPanel({
 
         {selectedHotspot.media_type === 'youtube' && (
           <div>
+            <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-2">YouTube URL</label>
             <input
               type="url"
               value={selectedHotspot.media_url || ''}
               onChange={e => onUpdateHotspot(selectedHotspot.id, { media_url: e.target.value || null })}
-              placeholder="Paste YouTube URL..."
-              className="w-full px-3 py-2.5 bg-zinc-950/60 border border-zinc-800/60 rounded-lg text-[13px] text-zinc-50 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-teal-500/40 focus:border-teal-500/40 transition-all"
+              placeholder="https://youtube.com/watch?v=..."
+              className="w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800/60 rounded-xl text-sm text-zinc-50 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-teal-500/40 focus:border-teal-500/40 transition-all"
             />
           </div>
         )}
@@ -144,14 +147,14 @@ export default function HotspotPanel({
         {(selectedHotspot.media_type === 'image' || selectedHotspot.media_type === 'video') && (
           <div>
             {selectedHotspot.media_url ? (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {selectedHotspot.media_type === 'image' && (
-                  <img src={selectedHotspot.media_url} alt="" className="w-full rounded-lg" />
+                  <img src={selectedHotspot.media_url} alt="" className="w-full rounded-xl" />
                 )}
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploading}
-                  className="text-[12px] text-teal-400 hover:text-teal-300 transition-colors"
+                  className="text-sm text-teal-400 hover:text-teal-300 transition-colors"
                 >
                   {uploading ? 'Uploading...' : 'Replace file'}
                 </button>
@@ -160,7 +163,7 @@ export default function HotspotPanel({
               <button
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
-                className="w-full py-8 border border-dashed border-zinc-700/50 rounded-lg text-[12px] text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all disabled:opacity-50"
+                className="w-full py-10 border border-dashed border-zinc-700/50 rounded-xl text-sm text-zinc-500 hover:text-zinc-300 hover:border-zinc-600 transition-all disabled:opacity-50"
               >
                 {uploading ? 'Uploading...' : `Choose ${selectedHotspot.media_type} file`}
               </button>

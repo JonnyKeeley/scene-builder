@@ -296,7 +296,7 @@ export default function SceneBuilder() {
                   <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>
                 </svg>
               </div>
-              <p className="text-[13px] text-zinc-500">Upload a 360° image to get started</p>
+              <p className="text-sm text-zinc-500">Upload a 360° image to get started</p>
             </div>
           </div>
         ) : (
@@ -333,7 +333,7 @@ export default function SceneBuilder() {
       {/* Placement mode instruction */}
       {showInstruction && (
         <div className="absolute top-4 left-20 z-10 animate-slide-up">
-          <div className="panel-glass px-3 py-2 text-[12px] text-zinc-400">
+          <div className="panel-glass px-3 py-2 text-sm text-zinc-400">
             Click on the panorama to place a hotspot
           </div>
         </div>
@@ -341,7 +341,7 @@ export default function SceneBuilder() {
 
       {/* Floating hotspot panel — right side, slides in/out */}
       <div
-        className={`absolute top-4 right-4 bottom-24 z-10 w-80 transition-all duration-300 ${
+        className={`absolute top-4 right-4 bottom-24 z-10 w-96 transition-all duration-300 ${
           panelOpen
             ? 'translate-x-0 opacity-100'
             : 'translate-x-8 opacity-0 pointer-events-none'
