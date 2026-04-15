@@ -194,6 +194,13 @@ export default function HotspotPanel({
             onChange={(chartData) => onUpdateHotspot(selectedHotspot.id, { media_url: JSON.stringify(chartData) })}
           />
         )}
+
+        <button
+          onClick={() => onSelectHotspot(null)}
+          className="w-full py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-xl text-sm font-medium transition-all active:scale-[0.98] mt-2"
+        >
+          Done
+        </button>
       </div>
     </div>
   )
