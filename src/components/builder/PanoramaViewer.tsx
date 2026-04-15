@@ -180,27 +180,33 @@ export default function PanoramaViewer({
       group.remove(child)
     }
 
-    // Create hotspot marker texture — red circle with white dot, drawn on canvas
+    // Create hotspot marker texture — light green circle with white cross (ThingLink style)
     const makeMarkerTexture = (size: number, selected: boolean) => {
       const canvas = document.createElement('canvas')
       canvas.width = size
       canvas.height = size
       const ctx = canvas.getContext('2d')!
       const cx = size / 2
-      // Red circle
+      // Light green circle
       ctx.beginPath()
       ctx.arc(cx, cx, cx * 0.85, 0, Math.PI * 2)
-      ctx.fillStyle = selected ? '#dc2626' : '#ef4444'
+      ctx.fillStyle = selected ? '#16a34a' : '#22c55e'
       ctx.fill()
-      // White dot
+      // White cross
+      const crossSize = cx * 0.4
+      ctx.strokeStyle = '#ffffff'
+      ctx.lineWidth = size * 0.08
+      ctx.lineCap = 'round'
       ctx.beginPath()
-      ctx.arc(cx, cx, cx * 0.35, 0, Math.PI * 2)
-      ctx.fillStyle = '#ffffff'
-      ctx.fill()
+      ctx.moveTo(cx - crossSize, cx)
+      ctx.lineTo(cx + crossSize, cx)
+      ctx.moveTo(cx, cx - crossSize)
+      ctx.lineTo(cx, cx + crossSize)
+      ctx.stroke()
       // Outer glow ring
       ctx.beginPath()
       ctx.arc(cx, cx, cx * 0.95, 0, Math.PI * 2)
-      ctx.strokeStyle = 'rgba(239, 68, 68, 0.3)'
+      ctx.strokeStyle = 'rgba(34, 197, 94, 0.3)'
       ctx.lineWidth = size * 0.06
       ctx.stroke()
       const texture = new THREE.Texture(canvas)
