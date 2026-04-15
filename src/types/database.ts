@@ -1,4 +1,4 @@
-export type MediaType = 'image' | 'youtube' | 'video' | 'chart' | 'gallery' | 'map'
+export type MediaType = 'image' | 'youtube' | 'video' | 'chart' | 'gallery' | 'map' | 'audio'
 
 export interface MapData {
   lat: number

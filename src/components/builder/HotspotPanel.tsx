@@ -11,6 +11,7 @@ const MEDIA_OPTIONS: { value: MediaType | ''; label: string }[] = [
   { value: 'chart', label: 'Chart' },
   { value: 'gallery', label: 'Gallery' },
   { value: 'map', label: 'Map' },
+  { value: 'audio', label: 'Audio' },
 ]
 
 interface HotspotPanelProps {
@@ -142,12 +143,15 @@ export default function HotspotPanel({
           </div>
         )}
 
-        {(selectedHotspot.media_type === 'image' || selectedHotspot.media_type === 'video') && (
+        {(selectedHotspot.media_type === 'image' || selectedHotspot.media_type === 'video' || selectedHotspot.media_type === 'audio') && (
           <div>
             {selectedHotspot.media_url ? (
               <div className="space-y-3">
                 {selectedHotspot.media_type === 'image' && (
                   <img src={selectedHotspot.media_url} alt="" className="w-full rounded-xl" />
+                )}
+                {selectedHotspot.media_type === 'audio' && (
+                  <audio src={selectedHotspot.media_url} controls className="w-full" />
                 )}
                 <button
                   onClick={() => fileInputRef.current?.click()}
@@ -172,7 +176,7 @@ export default function HotspotPanel({
             <input
               ref={fileInputRef}
               type="file"
-              accept={selectedHotspot.media_type === 'image' ? 'image/*' : 'video/*'}
+              accept={selectedHotspot.media_type === 'image' ? 'image/*' : selectedHotspot.media_type === 'audio' ? 'audio/*' : 'video/*'}
               onChange={e => {
                 const file = e.target.files?.[0]
                 if (file) onUploadMedia(selectedHotspot.id, file)

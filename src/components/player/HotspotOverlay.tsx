@@ -68,6 +68,15 @@ export default function HotspotOverlay({ hotspot, onClose }: HotspotOverlayProps
             ) : null
           })()}
 
+          {hotspot.media_type === 'audio' && hotspot.media_url && (
+            <audio
+              src={hotspot.media_url}
+              controls
+              autoPlay
+              className="w-full"
+            />
+          )}
+
           {hotspot.media_type === 'video' && hotspot.media_url && (
             <video
               src={hotspot.media_url}
