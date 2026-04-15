@@ -6,8 +6,12 @@ import PanoramaViewer from '@/components/builder/PanoramaViewer'
 import HotspotOverlay from '@/components/player/HotspotOverlay'
 
 function pitchYawToPercent(pitch: number, yaw: number): { x: number; y: number } {
+  // The sphere in PanoramaViewer is inverted (scale -1,1,1) so yaw from
+  // raycasting is mirrored relative to the equirectangular image UV.
+  // Negate yaw to correct for the inversion.
+  const correctedYaw = -yaw
   return {
-    x: ((yaw + Math.PI) / (2 * Math.PI)) * 100,
+    x: ((correctedYaw + Math.PI) / (2 * Math.PI)) * 100,
     y: ((Math.PI / 2 - pitch) / Math.PI) * 100,
   }
 }
