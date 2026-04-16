@@ -47,7 +47,7 @@ export default function Signup() {
       <div className="w-full max-w-[340px] animate-fade-in">
         <div className="text-center mb-10">
           <h1 className="text-sm font-semibold text-zinc-50 tracking-[0.15em] uppercase">
-            IGLOO
+            SCENE BUILDER
           </h1>
           <p className="text-sm text-zinc-500 mt-1">Create an account</p>
         </div>

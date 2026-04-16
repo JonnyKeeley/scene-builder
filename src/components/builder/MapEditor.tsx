@@ -29,7 +29,7 @@ export default function MapEditor({ value, onChange }: MapEditorProps) {
     try {
       const res = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(search)}&limit=1`,
-        { headers: { 'User-Agent': 'IglooSceneBuilder/1.0' } }
+        { headers: { 'User-Agent': 'SceneBuilder/1.0' } }
       )
       const data = await res.json()
       if (data[0]) {
