@@ -7,6 +7,7 @@ interface ToolbarProps {
   onTogglePlacement: () => void
   onPreview: () => void
   onPreviewIgloo: () => void
+  onPreviewWebGL: () => void
   onBack: () => void
 }
 
@@ -17,6 +18,7 @@ export default function Toolbar({
   onTogglePlacement,
   onPreview,
   onPreviewIgloo,
+  onPreviewWebGL,
   onBack,
 }: ToolbarProps) {
   const [expanded, setExpanded] = useState(false)
@@ -73,12 +75,21 @@ export default function Toolbar({
         onClick={onPreview}
       />
 
-      {/* Immersive */}
+      {/* Immersive (equirectangular) */}
       <ToolButton
         icon={<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>}
         label="Immersive"
         expanded={expanded}
         onClick={onPreviewIgloo}
+        accent
+      />
+
+      {/* WebGL (3D) */}
+      <ToolButton
+        icon={<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l9 4.5v9L12 21l-9-4.5v-9L12 3Z"/><path d="M12 12l9-4.5"/><path d="M12 12v9"/><path d="M12 12L3 7.5"/></svg>}
+        label="WebGL"
+        expanded={expanded}
+        onClick={onPreviewWebGL}
         accent
       />
     </div>

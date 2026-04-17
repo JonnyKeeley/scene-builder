@@ -20,7 +20,9 @@ function pitchYawToPercent(pitch: number, yaw: number): { x: number; y: number }
 export default function Player() {
   const { projectId } = useParams<{ projectId: string }>()
   const [searchParams] = useSearchParams()
-  const isIglooMode = searchParams.get('mode') === 'igloo'
+  const mode = searchParams.get('mode')
+  const isIglooMode = mode === 'igloo'
+  const isWebGLMode = mode === 'webgl'
 
   const [scenes, setScenes] = useState<Scene[]>([])
   const [hotspots, setHotspots] = useState<Hotspot[]>([])
@@ -182,7 +184,53 @@ export default function Player() {
     )
   }
 
-  // Scrollable perspective mode (existing)
+  // WebGL 3D mode — fullscreen panorama with 3D hotspot markers, no manual pan
+  // The immersive space hardware controls the view
+  if (isWebGLMode) {
+    return (
+      <div className="h-screen w-screen bg-black overflow-hidden relative">
+        <PanoramaViewer
+          imageUrl={activeScene.image_url}
+          hotspots={activeHotspots}
+          placementMode={false}
+          selectedHotspotId={selectedHotspot?.id ?? null}
+          onHotspotClick={handleHotspotClick}
+          overlayContent={
+            selectedHotspot ? (
+              <HotspotOverlay
+                hotspot={selectedHotspot}
+                onClose={() => setSelectedHotspot(null)}
+              />
+            ) : undefined
+          }
+        />
+
+        {/* Scene navigation pills */}
+        {scenes.length > 1 && (
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-40">
+            {scenes.map((scene, i) => (
+              <button
+                key={scene.id}
+                onClick={() => {
+                  setActiveSceneIndex(i)
+                  setSelectedHotspot(null)
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                  i === activeSceneIndex
+                    ? 'bg-teal-500 text-white'
+                    : 'bg-white/10 text-white/70 hover:bg-white/20'
+                }`}
+              >
+                {scene.title}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // Scrollable perspective mode (desktop preview)
   return (
     <div className="h-screen w-screen bg-black overflow-hidden relative">
       <PanoramaViewer

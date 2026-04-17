@@ -360,6 +360,7 @@ export default function SceneBuilder() {
           onTogglePlacement={() => dispatch({ type: 'TOGGLE_PLACEMENT' })}
           onPreview={() => window.open(`/play/${projectId}`, '_blank')}
           onPreviewIgloo={() => window.open(`/play/${projectId}?mode=igloo`, '_blank')}
+          onPreviewWebGL={() => window.open(`/play/${projectId}?mode=webgl`, '_blank')}
           onBack={() => navigate('/')}
         />
       </div>
